@@ -1,0 +1,46 @@
+{
+  "name": "react-app",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@celo/identity": "^5.1.2",
+    "@celo/poprf": "^0.1.9",
+    "@celo/rainbowkit-celo": "^1.2.0",
+    "@headlessui/react": "^2.0.3",
+    "@heroicons/react": "^2.1.3",
+    "@rainbow-me/rainbowkit": "^2.0.7",
+    "@tanstack/react-query": "^5.36.0",
+    "ethers": "^6.12.1",
+    "net": "^1.0.2",
+    "next": "14.2.3",
+    "next-auth": "^4.24.7",
+    "react": "^18",
+    "react-dom": "^18",
+    "source-map-support": "^0.5.21",
+    "viem": "^2.10.5",
+    "wagmi": "^2.8.7"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10",
+    "eslint": "^9",
+    "eslint-config-next": "14.2.3",
+    "postcss": "^8",
+    "tailwindcss": "^3",
+    "typescript": "^5"
+  },
+  "browser": {
+    "@celo/poprf": false,
+    "source-map-support": false,
+    "net": false,
+    "crypto": false
+  }
+}
