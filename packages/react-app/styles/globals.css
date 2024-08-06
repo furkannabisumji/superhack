@@ -25,3 +25,8 @@
 .pageContent.active {
     display: block;
 }
+
+.nav.active {
+    border-width: 0;
+    background-color: greenyellow;
+}
