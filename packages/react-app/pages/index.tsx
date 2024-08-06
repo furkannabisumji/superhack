@@ -15,11 +15,11 @@ import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 
 export default function Home() {
-  // const [account] = useState([]);
+  const [account] = useState([]);
 
-  // comment the line below and uncomment the line above to see the page
+  // uncomment the line below and comment the line above to see the sign up page
 
-  const [account] = useState();
+  // const [account] = useState();
 
   // const { account } = useSocialConnect();
 
