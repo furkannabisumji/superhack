@@ -29,7 +29,7 @@ function UserCard({
             <div className="flex items-center">
               <a
                 className="inline-block text-xs font-bold mr-2"
-                href="/profile"
+                href="/user-profile"
               >
                 Esther Howard
               </a>

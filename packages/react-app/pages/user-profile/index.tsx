@@ -1,15 +1,16 @@
 import PostCard from "@/components/PostCard";
+import ProductCard from "@/components/ProductCard";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 
-const Profile = () => {
+const UserProfile = () => {
   const [activeIndex, setactiveIndex] = useState(1);
   const handleClick = (index: SetStateAction<number>) => setactiveIndex(index);
   const checkActive = (index: number, className: any) =>
     activeIndex === index ? className : "";
   return (
     <div>
-      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-1/2 overflow-hidden -mt-10">
+      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
         <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500"></div>
         <div className="px-5 py-2 flex flex-col gap-3 pb-6">
           <div className="h-[90px] shadow-md w-[90px] rounded-full border-4 overflow-hidden -mt-14 border-white">
@@ -106,6 +107,11 @@ const Profile = () => {
 
             <div className={`pageContent ${checkActive(3, "active")}`}>
               {/* market place page */}
+              <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
+                <ProductCard />
+                <ProductCard />
+                <ProductCard />
+              </div>
             </div>
           </div>
         </div>
@@ -114,4 +120,4 @@ const Profile = () => {
   );
 };
 
-export default Profile;
+export default UserProfile;

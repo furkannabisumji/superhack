@@ -7,9 +7,15 @@ import {
 } from "@worldcoin/idkit";
 import { SetStateAction, useEffect, useState } from "react";
 import { useSocialConnect } from "@/SocialConnect/useSocialConnect";
+import Image from "next/image";
+
+import HubIcon from "@mui/icons-material/Hub";
+import HttpsIcon from "@mui/icons-material/Https";
+import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
+import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 
 export default function Home() {
-  const [account] = useState();
+  const [account] = useState([]);
 
   // const { account } = useSocialConnect();
 
@@ -43,27 +49,72 @@ export default function Home() {
   return (
     <main className="flex flex-col mt-10 px-10">
       {!account ? (
-        <div className="bg-slate-300 p-10 w-1/4 rounded-xl flex flex-col gap-20">
-          <div>
-            <h1 className="text-3xl text-black">Connect with your audience</h1>
+        <div className="flex flex-row gap-10">
+          {/* left */}
+          <div className="bg-slate-300 p-10 w-1/4 rounded-xl flex flex-col gap-20">
+            <div>
+              <h1 className="text-3xl text-black">
+                Connect with your audience
+              </h1>
+            </div>
+            <IDKitWidget
+              app_id="your app id" // obtained from the Developer Portal
+              action="your action id" // obtained from the Developer Portal
+              onSuccess={onSuccess} // callback when the modal is closed
+              handleVerify={handleVerify} // callback when the proof is received
+              verification_level={VerificationLevel.Device}
+            >
+              {({ open }) => (
+                // This is the button that will open the IDKit modal
+                <button
+                  className="rounded-full border border-slate-500 bg-white hover:bg-slate-500 hover:text-white  py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center"
+                  onClick={open}
+                >
+                  Verify with World ID
+                </button>
+              )}
+            </IDKitWidget>
           </div>
-          <IDKitWidget
-            app_id="your app id" // obtained from the Developer Portal
-            action="your action id" // obtained from the Developer Portal
-            onSuccess={onSuccess} // callback when the modal is closed
-            handleVerify={handleVerify} // callback when the proof is received
-            verification_level={VerificationLevel.Device}
-          >
-            {({ open }) => (
-              // This is the button that will open the IDKit modal
-              <button
-                className="rounded-full border border-slate-500 bg-white  py-1.5 px-5 text-black transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
-                onClick={open}
-              >
-                Verify with World ID
-              </button>
-            )}
-          </IDKitWidget>
+          {/* right */}
+          <div className="bg-slate-300 p-10 w-3/4 rounded-xl flex flex-col gap-20 text-black">
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-col gap-3">
+                <div>
+                  <HubIcon height={100} width={100} />
+                </div>
+                <h1 className="text-2xl">88</h1>
+
+                <p>For Flowbite, with zero maintenance downtime</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div>
+                  <HttpsIcon height={100} width={100} />
+                </div>
+                <h1 className="text-2xl">88</h1>
+
+                <p>For Flowbite, with zero maintenance downtime</p>
+              </div>
+            </div>
+
+            <div className="flex flex-row justify-between">
+              <div className="flex flex-col gap-3">
+                <div>
+                  <LocalGroceryStoreIcon height={100} width={100} />
+                </div>
+                <h1 className="text-2xl">88</h1>
+
+                <p>For Flowbite, with zero maintenance downtime</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                <div>
+                  <CurrencyBitcoinIcon height={100} width={100} />
+                </div>
+                <h1 className="text-2xl">88</h1>
+
+                <p>For Flowbite, with zero maintenance downtime</p>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="flex flex-row gap-20 relative">
