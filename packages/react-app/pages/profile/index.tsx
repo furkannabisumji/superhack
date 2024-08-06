@@ -101,11 +101,11 @@ const Profile = () => {
             </div>
 
             <div className={`pageContent ${checkActive(2, "active")}`}>
-              <p>2</p>
+              {/* Assets page for staking ... */}
             </div>
 
             <div className={`pageContent ${checkActive(3, "active")}`}>
-              <p>3</p>
+              {/* market place page */}
             </div>
           </div>
         </div>

@@ -1,10 +1,15 @@
 import PostCard from "@/components/PostCard";
 import UserCard from "@/components/userCard";
+import {
+  IDKitWidget,
+  VerificationLevel,
+  ISuccessResult,
+} from "@worldcoin/idkit";
 import { SetStateAction, useEffect, useState } from "react";
 import { useSocialConnect } from "@/SocialConnect/useSocialConnect";
 
 export default function Home() {
-  const [account] = useState([]);
+  const [account] = useState();
 
   // const { account } = useSocialConnect();
 
@@ -13,10 +18,53 @@ export default function Home() {
   const checkActive = (index: number, className: any) =>
     activeIndex === index ? className : "";
 
+  // worldId functions
+
+  const handleVerify = async (proof: ISuccessResult) => {
+    const res = await fetch("/api/verify", {
+      // route to your backend will depend on implementation
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(proof),
+    });
+    if (!res.ok) {
+      throw new Error("Verification failed."); // IDKit will display the error message to the user in the modal
+    }
+  };
+
+  const onSuccess = () => {
+    // This is where you should perform any actions after the modal is closed
+    // Such as redirecting the user to a new page
+    window.location.href = "/success";
+  };
+
   return (
     <main className="flex flex-col mt-10 px-10">
       {!account ? (
-        "Connect your wallet to use SocialConnect"
+        <div className="bg-slate-300 p-10 w-1/4 rounded-xl flex flex-col gap-20">
+          <div>
+            <h1 className="text-3xl text-black">Connect with your audience</h1>
+          </div>
+          <IDKitWidget
+            app_id="your app id" // obtained from the Developer Portal
+            action="your action id" // obtained from the Developer Portal
+            onSuccess={onSuccess} // callback when the modal is closed
+            handleVerify={handleVerify} // callback when the proof is received
+            verification_level={VerificationLevel.Device}
+          >
+            {({ open }) => (
+              // This is the button that will open the IDKit modal
+              <button
+                className="rounded-full border border-slate-500 bg-white  py-1.5 px-5 text-black transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
+                onClick={open}
+              >
+                Verify with World ID
+              </button>
+            )}
+          </IDKitWidget>
+        </div>
       ) : (
         <div className="flex flex-row gap-20 relative">
           {/* left panel */}
