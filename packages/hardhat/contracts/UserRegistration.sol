@@ -5,7 +5,12 @@ pragma solidity ^0.8.0;
  * @title UserRegistration
  * @dev A contract for registering users with WorldID and username.
  */
+
+
 contract UserRegistration {
+    // Address of the dev
+    address public devAddress;
+
     // Struct to represent a user
     struct User {
         address userAddress;
@@ -25,12 +30,23 @@ contract UserRegistration {
     // Event emitted when a new user is registered
     event UserRegistered(address indexed userAddress, string worldId, string username);
 
-    /**
+     constructor(){
+        devAddress = msg.sender;
+     }
+
+     modifier onlyDev(){
+        require(devAddress == msg.sender, "Not a dev");
+        _;
+     }
+
+    function registerUser(string memory _worldId, string memory _username) onlyDev public {
+
+     /**
      * @dev Registers a new user with a WorldID and username.
      * @param _worldId The WorldID of the user.
      * @param _username The username of the user.
      */
-    function registerUser(string memory _worldId, string memory _username) public {
+
         require(bytes(_worldId).length > 0, "WorldID is required");
         require(bytes(_username).length > 0, "Username is required");
         require(!worldIdExists[_worldId], "WorldID already registered");
