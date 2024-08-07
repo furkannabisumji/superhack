@@ -20,7 +20,7 @@ export default function Home() {
 
   // uncomment the line below and comment the line above to see the sign up page
 
-  const [account] = useState();
+  const [account, setAccount ] = useState<boolean>();
 
   // const { account } = useSocialConnect();
 
@@ -42,13 +42,14 @@ export default function Home() {
     });
     if (!res.ok) {
       throw new Error("Verification failed."); // IDKit will display the error message to the user in the modal
+    }else{
+      setAccount(true)
     }
   };
 
   const onSuccess = () => {
     // This is where you should perform any actions after the modal is closed
     // Such as redirecting the user to a new page
-    window.location.href = "/success";
   };
 
   return (
