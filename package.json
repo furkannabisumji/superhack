@@ -20,5 +20,8 @@
   "keywords": [
     "celo-composer",
     "celo"
-  ]
+  ],
+  "dependencies": {
+    "@worldcoin/idkit": "^1.2.2"
+  }
 }
