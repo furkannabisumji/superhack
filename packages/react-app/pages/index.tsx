@@ -13,6 +13,7 @@ import HubIcon from "@mui/icons-material/Hub";
 import HttpsIcon from "@mui/icons-material/Https";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
+import CreatePost from "@/components/CreatePost";
 
 export default function Home() {
   const [account] = useState([]);
@@ -196,7 +197,7 @@ export default function Home() {
 
           {/* live crypto data */}
 
-          <div className="flex flex-col gap-10 w-1/5">
+          <div className="fixed right-0 flex flex-col gap-10 w-1/5">
             <div className="shadow-md rounded-md mx-auto max-w-sm6 text-white">
               <h2 className="text-xl font-semibold mb-4 ">Top Crypto</h2>
               <ul>
@@ -285,6 +286,16 @@ export default function Home() {
                   </span>
                 </li>
               </ul>
+            </div>
+
+            <div>
+              <CreatePost
+                className="justify-end"
+                post={""}
+                likes={0}
+                comments={[]}
+                onCreatePostClick={() => {}}
+              />
             </div>
           </div>
         </div>
