@@ -268,9 +268,9 @@ const MyProfile = () => {
           <div className="px-5 py-2 flex flex-col gap-3 pb-6">
             {/* user products */}
             <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
-              <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              <ProductCard title={""} price={""} onBuyClick={() => {}} />
+              <ProductCard title={""} price={""} onBuyClick={() => {}} />
+              <ProductCard title={""} price={""} onBuyClick={() => {}} />
             </div>
           </div>
         </div>

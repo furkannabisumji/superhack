@@ -98,7 +98,13 @@ const UserProfile = () => {
               </button>
             </div>
             <div className={`pageContent ${checkActive(1, "active")}`}>
-              <PostCard />
+              <PostCard
+                userName={""}
+                text={""}
+                onUserClick={() => {}}
+                onCommentSendClick={() => {}}
+                onLikeClick={() => {}}
+              />
             </div>
 
             <div className={`pageContent ${checkActive(2, "active")}`}>
@@ -108,9 +114,9 @@ const UserProfile = () => {
             <div className={`pageContent ${checkActive(3, "active")}`}>
               {/* market place page */}
               <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
-                <ProductCard />
-                <ProductCard />
-                <ProductCard />
+                <ProductCard title={""} price={""} onBuyClick={() => {}} />
+                <ProductCard title={""} price={""} onBuyClick={() => {}} />
+                <ProductCard title={""} price={""} onBuyClick={() => {}} />
               </div>
             </div>
           </div>
