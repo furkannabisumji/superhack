@@ -76,7 +76,7 @@ export default function Header() {
 
                 {/* connect button */}
 
-                <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+                {/* <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   {!hideConnectBtn && (
                     <ConnectButton
                       showBalance={{ smallScreen: true, largeScreen: false }}
@@ -93,7 +93,7 @@ export default function Header() {
                       Social Connect
                     </button>
                   </div>
-                )}
+                )} */}
               </div>
             </div>
 
