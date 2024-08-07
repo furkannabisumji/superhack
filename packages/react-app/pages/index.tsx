@@ -62,8 +62,8 @@ export default function Home() {
               </h1>
             </div>
             <IDKitWidget
-              app_id="your app id" // obtained from the Developer Portal
-              action="your action id" // obtained from the Developer Portal
+              app_id="app_staging_a16f3f6d0fc113a7bf1c2f31a20c3020" // obtained from the Developer Portal
+              action="hack" // obtained from the Developer Portal
               onSuccess={onSuccess} // callback when the modal is closed
               handleVerify={handleVerify} // callback when the proof is received
               verification_level={VerificationLevel.Device}
