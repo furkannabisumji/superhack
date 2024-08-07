@@ -128,9 +128,21 @@ export default function Home() {
           <div className="flex flex-col gap-10 w-1/6 min-h-screen fixed top-32 left-5 bottom-0 border-r-2 pr-2 border-white">
             <div className="text-2xl text-white">Suggested</div>
 
-            <UserCard />
-            <UserCard />
-            <UserCard />
+            <UserCard
+              userName="user"
+              onUserClick={() => {}}
+              onFollowButtonClick={() => {}}
+            />
+            <UserCard
+              userName="user"
+              onUserClick={() => {}}
+              onFollowButtonClick={() => {}}
+            />
+            <UserCard
+              userName="user"
+              onUserClick={() => {}}
+              onFollowButtonClick={() => {}}
+            />
           </div>
 
           {/* feed */}
@@ -160,7 +172,13 @@ export default function Home() {
 
             <div className={`pageContent ${checkActive(1, "active")}`}>
               {/* Posts go here */}
-              <PostCard />
+              <PostCard
+                userName={""}
+                text={""}
+                onUserClick={() => {}}
+                onCommentSendClick={() => {}}
+                onLikeClick={() => {}}
+              />
             </div>
 
             <div className={`pageContent ${checkActive(2, "active")}`}>
