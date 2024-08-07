@@ -1,11 +1,10 @@
-import ProductCard from "@/components/ProductCard";
-import Chip from "@mui/material/Chip";
-import { Stack } from "@mui/material";
-import Link from "next/link";
 import { SetStateAction, useEffect, useState } from "react";
-import LinearProgress, {
-  linearProgressClasses,
-} from "@mui/material/LinearProgress";
+
+import Overview from "@/components/myProfile/overview";
+import Products from "@/components/myProfile/products";
+import Wallets from "@/components/myProfile/wallets";
+import DAO from "@/components/myProfile/DAO";
+import Messages from "@/components/myProfile/messages";
 
 const MyProfile = () => {
   const [activeIndex, setactiveIndex] = useState(1);
@@ -226,261 +225,22 @@ const MyProfile = () => {
         </div>
       </aside>
       <div className={`pageContent ${checkActive(1, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500"></div>
-          <div className="px-5 py-2 flex flex-col gap-3 pb-6">
-            <div className="h-[90px] shadow-md w-[90px] rounded-full border-4 overflow-hidden -mt-14 border-white">
-              <img
-                src="https://randomuser.me/api/portraits/women/9.jpg"
-                className="w-full h-full rounded-full object-center object-cover"
-              />
-            </div>
-            <div className="flex flex-row justify-between gap-2">
-              <div className="">
-                <h3 className="text-xl text-slate-900 relative font-bold leading-6">
-                  Dadda Hicham
-                </h3>
-                <p className="text-sm text-gray-600">@daddasoft</p>
-
-                <div className="flex flex-row gap-2 text-black text-xs">
-                  <p>40 Following</p>
-                  <p>35 Followers</p>
-                  <p>10 Subscribers</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 ">
-                <div className="flex gap-3 flex-wrap">
-                  <span className="rounded-sm bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
-                    Developer
-                  </span>
-                  <span className="rounded-sm bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    Design
-                  </span>
-                  <span className="rounded-sm bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    Managements
-                  </span>
-                  <span className="rounded-sm bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800">
-                    Projects
-                  </span>
-                </div>
-                <div className="flex gap-2 justify-end">
-                  {/* edit button*/}
-                  <Link
-                    href="/"
-                    className="rounded-full border border-slate-500 bg-slate-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
-                  >
-                    edit
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <h4 className="text-md text-black font-medium leading-3">About</h4>
-            <p className="text-sm text-stone-500">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere
-              dolores aliquid sequi sunt iusto ipsum earum natus omnis
-              asperiores architecto praesentium dignissimos pariatur, ipsa cum?
-              Voluptate vero eius at voluptas?
-            </p>
-          </div>
+        <div>
+          <Overview />
         </div>
       </div>
       <div className={`pageContent ${checkActive(2, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-row px-10 py-20 justify-between">
-              <h1 className="text-3xl">Products</h1>
-              <button
-                className="rounded-full border border-slate-500 bg-white hover:bg-slate-500 hover:text-white  py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center"
-                onClick={() => {}}
-              >
-                Mint NFTs
-              </button>
-            </div>
-          </div>
-          <div className="px-5 py-2 flex flex-col gap-3 pb-6">
-            {/* user products */}
-            <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
-              <ProductCard title={""} price={""} onBuyClick={() => {}} />
-              <ProductCard title={""} price={""} onBuyClick={() => {}} />
-              <ProductCard title={""} price={""} onBuyClick={() => {}} />
-            </div>
-          </div>
-        </div>
+        <Products />
       </div>
       <div className={`pageContent ${checkActive(3, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-row px-10 py-20 justify-between">
-              <h1 className="text-3xl">Connected Wallets</h1>
-              {/* will show a pop up of available wallets */}
-              {/* base or minipay */}
-              <button
-                className="rounded-full border border-slate-500 bg-white hover:bg-slate-500 hover:text-white  py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center"
-                onClick={() => {}}
-              >
-                Connect wallet
-              </button>
-            </div>
-          </div>
-          <div>{/* connected wallets */}</div>
-        </div>
+        <Wallets />
       </div>
 
       <div className={`pageContent ${checkActive(4, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-row px-10 py-20 justify-between">
-              <h1 className="text-3xl">Messages</h1>
-            </div>
-          </div>
-          <div>{/* messages */}</div>
-        </div>
+        <Messages />
       </div>
       <div className={`pageContent ${checkActive(5, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-screen bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-col gap-10 px-10 py-10 justify-between">
-              <h1 className="text-3xl">Our Governance</h1>
-              <p className="text-sm">
-                Following the request for proposal (RFP) from NEW (Network
-                Expansion WorkGroup) that concluded on Decemeber 5th, 2023 there
-                are 4 eligible submissions to developer wstEth brige on BNB
-                recieved postivie or neutral feedback from the community. This
-                vote will identify the most supported team among the eligible
-                competing submissions whose references given below to kick off
-                or continue development.
-                <div className="flex flex-col gap-2">
-                  <h2>Voting conditions</h2>
-                  <p>
-                    This vote will requires a quoroum of 5% LDO total supply
-                    (50M) votes for any single option . The winning submission
-                    will be determined based on two conditions.
-                  </p>
-                  <ul>
-                    <li>
-                      1. a quoroum of 50% in total accross all options is
-                      reached.
-                    </li>
-                    <li>
-                      2. The leading option must exceed the second candidate by
-                      a margin of 20% of votes participated in the vote
-                    </li>
-                  </ul>
-                </div>
-              </p>
-
-              <div className="flex flex-col break-inside py-2 px-5 rounded-xl bg-white dark:bg-slate-800 bg-clip-border">
-                <div className="flex flex-row justify-between items-center">
-                  {/* left */}
-
-                  <div className="flex flex-col gap-2">
-                    <h2 className="p-3">Proposal 1</h2>
-
-                    <Chip
-                      label="Passed"
-                      variant="outlined"
-                      size="small"
-                      className="text-[11px] p-2 text-green-400 border-green-400"
-                    />
-                  </div>
-
-                  {/* right */}
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-row gap-2">
-                      <Link
-                        href="/"
-                        className="rounded-full border border-green-bg-green-400 bg-green-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-xs font-inter flex items-center justify-center"
-                      >
-                        Let's do it
-                      </Link>
-                      <div className="flex flex-col">
-                        <h2>50%</h2>
-                        <LinearProgress
-                          color="success"
-                          variant="determinate"
-                          value={50}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-row gap-2">
-                      <Link
-                        href="/"
-                        className="rounded-full border border-red-500 bg-red-border-red-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-xs font-inter flex items-center justify-center"
-                      >
-                        No way
-                      </Link>
-                      <div className="flex flex-col">
-                        <h2>50%</h2>
-                        <LinearProgress
-                          color="error"
-                          variant="determinate"
-                          value={50}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-col break-inside py-2 px-5 rounded-xl bg-white dark:bg-slate-800 bg-clip-border">
-                <div className="flex flex-row justify-between items-center">
-                  {/* left */}
-
-                  <div className="flex flex-col gap-2">
-                    <h2 className="p-3">Proposal 2</h2>
-
-                    <Chip
-                      label="Passed"
-                      variant="outlined"
-                      size="small"
-                      className="text-[11px] p-2 text-green-400 border-green-400"
-                    />
-                  </div>
-
-                  {/* right */}
-                  <div className="flex flex-col gap-2">
-                    <div className="flex flex-row gap-2">
-                      <Link
-                        href="/"
-                        className="rounded-full border border-green-bg-green-400 bg-green-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-xs font-inter flex items-center justify-center"
-                      >
-                        Let's do it
-                      </Link>
-                      <div className="flex flex-col">
-                        <h2>50%</h2>
-                        <LinearProgress
-                          color="success"
-                          variant="determinate"
-                          value={50}
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-row gap-2">
-                      <Link
-                        href="/"
-                        className="rounded-full border border-red-500 bg-red-border-red-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-xs font-inter flex items-center justify-center"
-                      >
-                        No way
-                      </Link>
-                      <div className="flex flex-col">
-                        <h2>50%</h2>
-                        <LinearProgress
-                          color="error"
-                          variant="determinate"
-                          value={50}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div>{/* messages */}</div>
-        </div>
+        <DAO />
       </div>
     </div>
   );
