@@ -33,11 +33,14 @@ export default function Header() {
           setIsOpen(false);
         }}
       />
-      <Disclosure as="nav" className="bg-prosperity border-b border-black">
+      <Disclosure
+        as="nav"
+        className="bg-slate-500 border-b border-slate-500 fixed top-0 left-0 right-0 z-10"
+      >
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
-              <div className="relative flex h-16 justify-between">
+              <div className="relative flex h-10 justify-between">
                 <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
                   {/* Mobile menu button */}
                   <Disclosure.Button className="inline-flex items-center justify-center rounded-md p-2 text-black focus:outline-none focus:ring-1 focus:ring-inset focus:rounded-none focus:ring-black">
@@ -51,23 +54,28 @@ export default function Header() {
                 </div>
                 <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
                   <div className="flex flex-shrink-0 items-center">
-                    <Image
+                    {/* logo will be here */}
+
+                    {/* <Image
                       className="block h-8 w-auto sm:block lg:block"
                       src="/logo.svg"
                       width="24"
                       height="24"
                       alt="Celo Logo"
-                    />
+                    /> */}
                   </div>
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <a
-                      href="#"
-                      className="inline-flex items-center border-b-2 border-black px-1 pt-1 text-sm font-medium text-gray-900"
+                      href="/"
+                      className="inline-flex items-center px-1 pt-1 text-sm font-medium text-white"
                     >
                       Home
                     </a>
                   </div>
                 </div>
+
+                {/* connect button */}
+
                 <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                   {!hideConnectBtn && (
                     <ConnectButton
@@ -80,7 +88,7 @@ export default function Header() {
                     <button
                       type="button"
                       onClick={() => setIsOpen(true)}
-                      className="text-white bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-xl text-base px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#050708]/40 dark:focus:ring-gray-600"
+                      className="text-white bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-xl text-md px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#050708]/40 dark:focus:ring-gray-600"
                     >
                       Social Connect
                     </button>
@@ -93,8 +101,8 @@ export default function Header() {
               <div className="space-y-1 pt-2 pb-4">
                 <Disclosure.Button
                   as="a"
-                  href="#"
-                  className="block border-l-4 border-black py-2 pl-3 pr-4 text-base font-medium text-black"
+                  href="/"
+                  className="block border-l-4 border-black py-2 pl-3 pr-4 text-base font-medium text-white"
                 >
                   Home
                 </Disclosure.Button>

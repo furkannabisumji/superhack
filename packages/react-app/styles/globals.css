@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.tab {
+    color: black;
+    background-color: white;
+    border-width: 1px;
+    border-color: rgb(158, 157, 157);
+    border-radius: 1.5rem;
+    padding-inline: 1rem;
+    padding-block: 0.5rem;
+    font-weight: bold;
+    font-size: 10px;
+}
+.tab.active {
+    border-width: 0;
+    background-color: greenyellow;
+}
+
+.pageContent {
+    display: none;
+}
+
+.pageContent.active {
+    display: block;
+}
+
+.nav.active {
+    border-width: 0;
+    background-color: greenyellow;
+}
