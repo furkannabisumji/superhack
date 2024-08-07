@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.24;
 
 /**
  * @title UserRegistration
  * @dev A contract for registering users with WorldID and username.
  */
-
 
 contract UserRegistration {
     // Address of the dev
@@ -28,24 +27,30 @@ contract UserRegistration {
     mapping(string => bool) private usernameExists;
 
     // Event emitted when a new user is registered
-    event UserRegistered(address indexed userAddress, string worldId, string username);
+    event UserRegistered(
+        address indexed userAddress,
+        string worldId,
+        string username
+    );
 
-     constructor(){
+    constructor() {
         devAddress = msg.sender;
-     }
+    }
 
-     modifier onlyDev(){
+    modifier onlyDev() {
         require(devAddress == msg.sender, "Not a dev");
         _;
-     }
+    }
 
-    function registerUser(string memory _worldId, string memory _username) onlyDev public {
-
-     /**
-     * @dev Registers a new user with a WorldID and username.
-     * @param _worldId The WorldID of the user.
-     * @param _username The username of the user.
-     */
+    function registerUser(
+        string memory _worldId,
+        string memory _username
+    ) public onlyDev {
+        /**
+         * @dev Registers a new user with a WorldID and username.
+         * @param _worldId The WorldID of the user.
+         * @param _username The username of the user.
+         */
 
         require(bytes(_worldId).length > 0, "WorldID is required");
         require(bytes(_username).length > 0, "Username is required");
