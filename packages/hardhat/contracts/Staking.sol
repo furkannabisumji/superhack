@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.25;
+pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
@@ -33,7 +33,10 @@ contract Staking {
     function stake(uint256 amount) public {
         require(amount > 0, "Cannot stake 0 tokens");
         Stake storage userStake = stakes[msg.sender];
-        require(block.timestamp >= userStake.timestamp + lockPeriod, "You can only stake once per week");
+        require(
+            block.timestamp >= userStake.timestamp + lockPeriod,
+            "You can only stake once per week"
+        );
 
         if (userStake.amount == 0) {
             totalStakers++;
@@ -49,7 +52,10 @@ contract Staking {
     function withdrawStake() public {
         Stake storage userStake = stakes[msg.sender];
         require(userStake.amount > 0, "No stake found");
-        require(block.timestamp >= userStake.timestamp + lockPeriod, "Stake is still locked");
+        require(
+            block.timestamp >= userStake.timestamp + lockPeriod,
+            "Stake is still locked"
+        );
 
         uint256 amount = userStake.amount;
         userStake.amount = 0;
@@ -73,11 +79,14 @@ contract Staking {
     function claimRewards() public {
         Stake storage userStake = stakes[msg.sender];
         require(userStake.amount > 0, "No stake found");
-        require(block.timestamp >= userStake.lastClaimed + lockPeriod, "You can only claim rewards once per week");
+        require(
+            block.timestamp >= userStake.lastClaimed + lockPeriod,
+            "You can only claim rewards once per week"
+        );
 
         uint256 reward = calculateRewards(msg.sender);
         require(reward > 0, "No rewards available");
-        
+
         userStake.lastClaimed = block.timestamp;
         stakingToken.safeTransfer(msg.sender, reward);
         emit RewardClaimed(msg.sender, reward);

@@ -1,6 +1,10 @@
-import ProductCard from "@/components/ProductCard";
-import Link from "next/link";
 import { SetStateAction, useEffect, useState } from "react";
+
+import Overview from "@/components/myProfile/overview";
+import Products from "@/components/myProfile/products";
+import Wallets from "@/components/myProfile/wallets";
+import DAO from "@/components/myProfile/DAO";
+import Messages from "@/components/myProfile/messages";
 
 const MyProfile = () => {
   const [activeIndex, setactiveIndex] = useState(1);
@@ -125,6 +129,35 @@ const MyProfile = () => {
                 </span>
               </button>
             </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => handleClick(5)}
+                className={`nav ${checkActive(
+                  5,
+                  "active"
+                )} flex items-center p-2 w-full text-base font-normal text-gray-900 rounded-lg transition duration-75 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700`}
+                aria-controls="dropdown-sales"
+                data-collapse-toggle="dropdown-sales"
+              >
+                <svg
+                  aria-hidden="true"
+                  className="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 2a4 4 0 00-4 4v1H5a1 1 0 00-.994.89l-1 9A1 1 0 004 18h12a1 1 0 00.994-1.11l-1-9A1 1 0 0015 7h-1V6a4 4 0 00-4-4zm2 5V6a2 2 0 10-4 0v1h4zm-6 3a1 1 0 112 0 1 1 0 01-2 0zm7-1a1 1 0 100 2 1 1 0 000-2z"
+                    clip-rule="evenodd"
+                  ></path>
+                </svg>
+                <span className="flex-1 ml-3 text-left whitespace-nowrap">
+                  DAO
+                </span>
+              </button>
+            </li>
           </ul>
           <ul className="pt-5 mt-5 space-y-2 border-t border-gray-200 dark:border-gray-700">
             <li>
@@ -192,119 +225,22 @@ const MyProfile = () => {
         </div>
       </aside>
       <div className={`pageContent ${checkActive(1, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500"></div>
-          <div className="px-5 py-2 flex flex-col gap-3 pb-6">
-            <div className="h-[90px] shadow-md w-[90px] rounded-full border-4 overflow-hidden -mt-14 border-white">
-              <img
-                src="https://randomuser.me/api/portraits/women/9.jpg"
-                className="w-full h-full rounded-full object-center object-cover"
-              />
-            </div>
-            <div className="flex flex-row justify-between gap-2">
-              <div className="">
-                <h3 className="text-xl text-slate-900 relative font-bold leading-6">
-                  Dadda Hicham
-                </h3>
-                <p className="text-sm text-gray-600">@daddasoft</p>
-
-                <div className="flex flex-row gap-2 text-black text-xs">
-                  <p>40 Following</p>
-                  <p>35 Followers</p>
-                  <p>10 Subscribers</p>
-                </div>
-              </div>
-
-              <div className="flex flex-col gap-3 ">
-                <div className="flex gap-3 flex-wrap">
-                  <span className="rounded-sm bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
-                    Developer
-                  </span>
-                  <span className="rounded-sm bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                    Design
-                  </span>
-                  <span className="rounded-sm bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                    Managements
-                  </span>
-                  <span className="rounded-sm bg-indigo-100 px-3 py-1 text-xs font-medium text-indigo-800">
-                    Projects
-                  </span>
-                </div>
-                <div className="flex gap-2 justify-end">
-                  {/* edit button*/}
-                  <Link
-                    href="/"
-                    className="rounded-full border border-slate-500 bg-slate-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
-                  >
-                    edit
-                  </Link>
-                </div>
-              </div>
-            </div>
-
-            <h4 className="text-md text-black font-medium leading-3">About</h4>
-            <p className="text-sm text-stone-500">
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Facere
-              dolores aliquid sequi sunt iusto ipsum earum natus omnis
-              asperiores architecto praesentium dignissimos pariatur, ipsa cum?
-              Voluptate vero eius at voluptas?
-            </p>
-          </div>
+        <div>
+          <Overview />
         </div>
       </div>
       <div className={`pageContent ${checkActive(2, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-row px-10 py-20 justify-between">
-              <h1 className="text-3xl">Products</h1>
-              <button
-                className="rounded-full border border-slate-500 bg-white hover:bg-slate-500 hover:text-white  py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center"
-                onClick={() => {}}
-              >
-                Mint NFTs
-              </button>
-            </div>
-          </div>
-          <div className="px-5 py-2 flex flex-col gap-3 pb-6">
-            {/* user products */}
-            <div className="mx-auto grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 justify-items-center justify-center gap-y-20 gap-x-14 mt-10 mb-5">
-              <ProductCard title={""} price={""} onBuyClick={() => {}} />
-              <ProductCard title={""} price={""} onBuyClick={() => {}} />
-              <ProductCard title={""} price={""} onBuyClick={() => {}} />
-            </div>
-          </div>
-        </div>
+        <Products />
       </div>
       <div className={`pageContent ${checkActive(3, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-row px-10 py-20 justify-between">
-              <h1 className="text-3xl">Connected Wallets</h1>
-              {/* will show a pop up of available wallets */}
-              {/* base or minipay */}
-              <button
-                className="rounded-full border border-slate-500 bg-white hover:bg-slate-500 hover:text-white  py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center"
-                onClick={() => {}}
-              >
-                Connect wallet
-              </button>
-            </div>
-          </div>
-          <div>{/* connected wallets */}</div>
-        </div>
+        <Wallets />
       </div>
 
       <div className={`pageContent ${checkActive(4, "active")}`}>
-        <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
-          <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500">
-            <div className="flex flex-row px-10 py-20 justify-between">
-              <h1 className="text-3xl">Messages</h1>
-              {/* will show a pop up of available wallets */}
-              {/* base or minipay */}
-            </div>
-          </div>
-          <div>{/* messages */}</div>
-        </div>
+        <Messages />
+      </div>
+      <div className={`pageContent ${checkActive(5, "active")}`}>
+        <DAO />
       </div>
     </div>
   );
