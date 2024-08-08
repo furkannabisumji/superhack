@@ -6,6 +6,7 @@ import {
   ISuccessResult,
 } from "@worldcoin/idkit";
 import { SetStateAction, useEffect, useState } from "react";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useSocialConnect } from "@/SocialConnect/useSocialConnect";
 import Image from "next/image";
 
@@ -14,13 +15,14 @@ import HttpsIcon from "@mui/icons-material/Https";
 import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 import CreatePost from "@/components/CreatePost";
+import { Dialog, DialogTitle } from "@mui/material";
 
 export default function Home() {
   // const [account] = useState([]);
 
   // uncomment the line below and comment the line above to see the sign up page
 
-  const [account, setAccount] = useState<boolean>(true);
+  const [account, setAccount] = useState<boolean>();
 
   // const { account } = useSocialConnect();
 
@@ -28,6 +30,18 @@ export default function Home() {
   const handleClick = (index: SetStateAction<number>) => setactiveIndex(index);
   const checkActive = (index: number, className: any) =>
     activeIndex === index ? className : "";
+
+  // modal
+  const [open, setOpen] = useState(false);
+  const handleClose = (value: string) => {
+    setOpen(false);
+  };
+
+  // second modal
+  const [modal2Open, setModal2Open] = useState(false);
+  const handleModal2Close = (value: string) => {
+    setModal2Open(false);
+  };
 
   // worldId functions
 
@@ -44,6 +58,7 @@ export default function Home() {
       throw new Error("Verification failed."); // IDKit will display the error message to the user in the modal
     } else {
       setAccount(true);
+      setOpen(true);
     }
   };
 
@@ -124,6 +139,39 @@ export default function Home() {
         </div>
       ) : (
         <div className="flex flex-row gap-20 relative">
+          <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>Connect Wallet</DialogTitle>
+            <div className="flex flex-col gap-2 p-5 mt-2">
+              <ConnectButton
+                showBalance={{ smallScreen: true, largeScreen: false }}
+              />
+            </div>
+          </Dialog>
+
+          <Dialog onClose={handleModal2Close} open={modal2Open}>
+            <DialogTitle>Set up your user name</DialogTitle>
+            <div className="flex flex-col gap-2 p-5 mt-2">
+              <input
+                id="username"
+                name="username"
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                defaultValue={""}
+              />
+              <ConnectButton
+                showBalance={{ smallScreen: true, largeScreen: false }}
+              />
+              <button
+                type="button"
+                data-autofocus
+                onClick={() => {
+                  handleModal2Close;
+                }}
+                className="rounded-full border border-slate-500 bg-white  py-1.5 px-5 text-black transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
+              >
+                Continue to App
+              </button>
+            </div>
+          </Dialog>
           {/* left panel */}
 
           {/* fetches users on the platform */}
