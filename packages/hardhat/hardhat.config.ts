@@ -5,7 +5,7 @@ import * as dotenv from "dotenv";
 dotenv.config();
 
 const config: HardhatUserConfig = {
-  solidity: "0.8.17",
+  solidity: "0.8.24",
   networks: {
     alfajores: {
       url: "https://alfajores-forno.celo-testnet.org",
