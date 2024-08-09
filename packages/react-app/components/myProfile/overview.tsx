@@ -20,11 +20,11 @@ function Overview({}: Props) {
             </h3>
             <p className="text-sm text-gray-600">@daddasoft</p>
 
-            <div className="flex flex-row gap-2 text-black text-xs">
+            <span className="flex flex-row gap-2 text-black text-xs">
               <p>40 Following</p>
               <p>35 Followers</p>
               <p>10 Subscribers</p>
-            </div>
+            </span>
           </div>
 
           <div className="flex flex-col gap-3 ">
