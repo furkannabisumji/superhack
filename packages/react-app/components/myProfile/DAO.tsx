@@ -144,7 +144,7 @@ function DAO({}: Props) {
         const signer = provider.getSigner();
         const contract = new ethers.Contract(
           '0xe4Bb30189ad42E76C7AB41d5921D500b2d723cBD',
-          Governance.abi,
+          contractABI,
           signer
         );
         
