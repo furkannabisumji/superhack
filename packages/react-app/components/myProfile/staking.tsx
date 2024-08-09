@@ -124,7 +124,7 @@ function Staking({}: Props) {
 
               <button
                 onClick={handleStake}
-                className="border mt-6 bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 rounded-3xl py-2 px-6 text-[12px] text-white"
+                className="border mt-6 bg-slate-500 rounded-3xl py-2 px-6 text-[12px] text-white"
               >
                 Stake Tokens
               </button>

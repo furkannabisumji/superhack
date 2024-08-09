@@ -63,7 +63,7 @@ function Lending({}: Props) {
               defaultValue={50}
               aria-label="Default"
               valueLabelDisplay="auto"
-              className="text-black"
+              className="text-white"
             />
           </div>
 
@@ -75,7 +75,7 @@ function Lending({}: Props) {
               <FormControl fullWidth>
                 <InputLabel
                   id="demo-simple-select-label"
-                  className="text-white font-bold"
+                  className="text-black font-extralight"
                 >
                   value
                 </InputLabel>
