@@ -1,9 +1,46 @@
 import { Chip, LinearProgress } from "@mui/material";
 import Link from "next/link";
 
+import React, { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import Governance from '../artifacts/contracts/Governance.sol/Governance.json';
+// import Governance from '../../hardhat/artifacts/contracts/Governance.sol/Governance.json'; // Update the path as necessary
+
+
 type Props = {};
 
 function DAO({}: Props) {
+
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [signer, setSigner] = useState<ethers.Signer | null>(null);
+  const [contract, setContract] = useState<Contract | null>(null);
+
+   // Function to initialize the contract
+   useEffect(() => {
+    const init = async () => {
+      // First, let's make sure the user has MetaMask installed
+      if (typeof window.ethereum !== 'undefined') {
+        // Use MetaMask's provider
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const contract = new ethers.Contract(
+          'Your_Contract_Address', // Replace with your contract's address
+          Governance.abi,
+          signer
+        );
+        
+        setProvider(provider);
+        setSigner(signer);
+        setContract(contract);
+      } else {
+        console.log("Please install MetaMask to interact with this app.");
+      }
+    };
+
+    init();
+  }, []);
+
+
   return (
     <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
       <div className="h-screen bg-gradient-to-r from-slate-400 to-slate-500">
