@@ -9,14 +9,17 @@ function DAO({}: Props) {
       <div className="h-screen bg-gradient-to-r from-slate-400 to-slate-500">
         <div className="flex flex-col gap-10 px-10 py-10 justify-between">
           <h1 className="text-3xl">Our Governance</h1>
-          <p className="text-sm">
-            Following the request for proposal (RFP) from NEW (Network Expansion
-            WorkGroup) that concluded on Decemeber 5th, 2023 there are 4
-            eligible submissions to developer wstEth brige on BNB recieved
-            postivie or neutral feedback from the community. This vote will
-            identify the most supported team among the eligible competing
-            submissions whose references given below to kick off or continue
-            development.
+          <div className="text-sm">
+            <p>
+              Following the request for proposal (RFP) from NEW (Network
+              Expansion WorkGroup) that concluded on Decemeber 5th, 2023 there
+              are 4 eligible submissions to developer wstEth brige on BNB
+              recieved postivie or neutral feedback from the community. This
+              vote will identify the most supported team among the eligible
+              competing submissions whose references given below to kick off or
+              continue development.
+            </p>
+
             <div className="flex flex-col gap-2">
               <h2>Voting conditions</h2>
               <p>
@@ -34,7 +37,7 @@ function DAO({}: Props) {
                 </li>
               </ul>
             </div>
-          </p>
+          </div>
 
           <div className="flex flex-col break-inside py-2 px-5 rounded-xl bg-white dark:bg-slate-800 bg-clip-border">
             <div className="flex flex-row justify-between items-center">

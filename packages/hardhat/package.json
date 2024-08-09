@@ -5,7 +5,12 @@
     "hardhat": "^2.22.7"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@pythnetwork/price-service-client": "^1.9.0",
     "ts-node": "^10.9.2"
+=======
+    "@openzeppelin/contracts": "^5.0.2",
+    "solmate": "^6.2.0"
+>>>>>>> 0c36789cb6f3b315cc9696dac3d80c8c68ab1c81
   }
 }
