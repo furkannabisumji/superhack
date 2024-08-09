@@ -9,13 +9,13 @@ import Governance from '../artifacts/contracts/Governance.sol/Governance.json';
 
 type Props = {};
 
-function DAO({}: Props) {
+function DAO({ }: Props) {
 
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const [contract, setContract] = useState<Contract | null>(null);
 
-  const contractABI =  [
+  const contractABI = [
     {
       "inputs": [],
       "stateMutability": "nonpayable",
@@ -134,8 +134,8 @@ function DAO({}: Props) {
     }
   ]
 
-   // Function to initialize the contract
-   useEffect(() => {
+  // Function to initialize the contract
+  useEffect(() => {
     const init = async () => {
       // First, let's make sure the user has MetaMask installed
       if (typeof window.ethereum !== 'undefined') {
@@ -147,7 +147,7 @@ function DAO({}: Props) {
           contractABI,
           signer
         );
-        
+
         setProvider(provider);
         setSigner(signer);
         setContract(contract);
