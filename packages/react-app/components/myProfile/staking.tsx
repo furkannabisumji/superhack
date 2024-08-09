@@ -62,33 +62,37 @@ function Staking({}: Props) {
       </div>
 
       <div className="flex flex-row gap-10 mb-10">
-        <div className="border border-slate-300 rounded-lg grid grid-flow-col gap-5 text-center auto-cols-max">
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-            <span className="countdown font-mono text-5xl">
-              <span>15</span>
-            </span>
-            days
-          </div>
+        <div className="flex flex-col gap-5">
+          <h1>Lock down Period</h1>
+          <div className="border border-slate-300 rounded-lg grid grid-flow-col gap-5 text-center auto-cols-max">
+            <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+              <span className="countdown font-mono text-5xl">
+                <span>15</span>
+              </span>
+              days
+            </div>
 
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-            <span className="countdown font-mono text-5xl">
-              <span>10</span>
-            </span>
-            hours
-          </div>
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-            <span className="countdown font-mono text-5xl">
-              <span>24</span>
-            </span>
-            min
-          </div>
-          <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
-            <span className="countdown font-mono text-5xl">
-              <span>23</span>
-            </span>
-            sec
+            <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+              <span className="countdown font-mono text-5xl">
+                <span>10</span>
+              </span>
+              hours
+            </div>
+            <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+              <span className="countdown font-mono text-5xl">
+                <span>24</span>
+              </span>
+              min
+            </div>
+            <div className="flex flex-col p-2 bg-neutral rounded-box text-neutral-content">
+              <span className="countdown font-mono text-5xl">
+                <span>23</span>
+              </span>
+              sec
+            </div>
           </div>
         </div>
+
         <LineChart
           xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
           series={[
