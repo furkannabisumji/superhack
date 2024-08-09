@@ -2,15 +2,13 @@
   "name": "hardhat-project",
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
-    "hardhat": "^2.22.7"
+    "hardhat": "^2.22.7",
+    "typescript": "^5.5.4"
   },
   "dependencies": {
-<<<<<<< HEAD
-    "@pythnetwork/price-service-client": "^1.9.0",
-    "ts-node": "^10.9.2"
-=======
     "@openzeppelin/contracts": "^5.0.2",
-    "solmate": "^6.2.0"
->>>>>>> 0c36789cb6f3b315cc9696dac3d80c8c68ab1c81
+    "@pythnetwork/price-service-client": "^1.9.0",
+    "solmate": "^6.2.0",
+    "ts-node": "^10.9.2"
   }
 }
