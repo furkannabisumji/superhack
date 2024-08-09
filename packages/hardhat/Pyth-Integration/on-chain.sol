@@ -23,6 +23,7 @@ contract MyContract {
      * Add the priceUpdate argument to any method on your contract that needs to read the Pyth price.
      * @param priceUpdate The encoded data to update the contract with the latest price
      */
+     
     function exampleMethod(bytes[] calldata priceUpdate) public payable {
         // Submit a priceUpdate to the Pyth contract to update the on-chain price.
         uint fee = pyth.getUpdateFee(priceUpdate);

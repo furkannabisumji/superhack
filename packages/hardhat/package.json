@@ -3,5 +3,9 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^5.0.0",
     "hardhat": "^2.22.7"
+  },
+  "dependencies": {
+    "@pythnetwork/price-service-client": "^1.9.0",
+    "ts-node": "^10.9.2"
   }
 }
