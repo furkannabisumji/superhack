@@ -11,9 +11,19 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/ICERC20.sol"; // Interface for Compound cToken
 import "./interfaces/ISuperformRouter.sol"; // Interface for SuperformRouter
 
+interface IStargatePool {
+    function addLiquidity(uint amount) external returns (uint lpTokens);
+    function removeLiquidity(uint lpTokenAmount) external returns (uint underlyingAmount);
+}
+
+
 contract TokenVault is ERC4626, ReentrancyGuard {
+
+    
     mapping(address => uint256) public shareHolder;
     mapping(address => uint256) public debt; // Track borrowed amounts for each user
+
+    IStargatePool public stargatePool;
 
     ICERC20 public cToken;
     ISuperformRouter public superformRouter;
