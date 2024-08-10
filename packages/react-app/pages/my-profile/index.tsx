@@ -23,7 +23,7 @@ const MyProfile = () => {
 
   return (
     <div className="flex flex-row relative justify-between gap-2 md:gap-20 w-full h-screen">
-      <div className="flex flex-col fixed left-2 p-2 gap-2 md:gap-5 bg-white text-gray-500 rounded-xl w-1/6 h-fit">
+      <div className="flex flex-col fixed left-2 md:left-5 p-2 gap-2 md:gap-5 bg-white text-gray-500 rounded-xl w-1/6 h-fit">
         <div className="flex flex-row gap-5">
           <button
             type="button"
@@ -121,7 +121,7 @@ const MyProfile = () => {
           </button>
         </div>
       </div>
-      <div className="flex ml-20 md:ml-60 w-5/6">
+      <div className="flex ml-20 md:ml-64 w-5/6">
         <div className={`pageContent ${checkActive(1, "active")}`}>
           <div>
             <Overview />
