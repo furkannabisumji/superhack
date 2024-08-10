@@ -2,26 +2,24 @@
 pragma solidity ^0.8.24;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./MockLPToken.sol";  // Ensure this points to the correct file path
 
 contract MockStargateRouter {
     IERC20 public underlyingToken;
+    MockLPToken public lpToken;
 
-    // Constructor to set the underlying token address
-    constructor(address _tokenAddress) {
+    constructor(address _tokenAddress, address _lpTokenAddress) {
         underlyingToken = IERC20(_tokenAddress);
+        lpToken = MockLPToken(_lpTokenAddress);
     }
 
-    // Simulates adding liquidity to a pool
     function addLiquidity(uint256 poolId, uint256 amount, address to) external {
-        // Assume the token has been approved for transfer
-        underlyingToken.transferFrom(msg.sender, address(this), amount);
-        // Mock behavior, such as issuing LP tokens or similar actions
-        // In a real scenario, you might want to mint mock LP tokens here
+        require(underlyingToken.transferFrom(msg.sender, address(this), amount), "Transfer failed");
+        lpToken.mint(to, amount);  // Assume 1:1 minting for simplicity
     }
 
-    // Simulates removing liquidity from a pool
     function removeLiquidity(uint256 poolId, uint256 amount, address to) external {
-        // Return the corresponding amount of underlying asset
-        underlyingToken.transfer(to, amount);
+        lpToken.burn(msg.sender, amount);
+        require(underlyingToken.transfer(to, amount), "Underlying transfer failed");
     }
 }

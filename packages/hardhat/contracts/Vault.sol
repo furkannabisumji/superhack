@@ -3,7 +3,7 @@ pragma solidity ^0.8.24;
 
 import "solmate/src/mixins/ERC4626.sol";
 
-contract TokenVault is ERC4626 {
+contract TokenVaultDraft1 is ERC4626 {
     // a mapping that checks if a user has deposited the token
     mapping(address => uint256) public shareHolder;
 

@@ -22,7 +22,7 @@ const config: HardhatUserConfig = {
       chainId: 11155111,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
     },
-    base: {  // Ethereum Base network configuration
+    baseSepolia: {  // Ethereum Base network configuration
       url: process.env.BASE_SEPOLIA_RPC_URL || "https://mainnet.infura.io/v3/YOUR_INFURA_PROJECT_ID",
       chainId: 84532,
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
