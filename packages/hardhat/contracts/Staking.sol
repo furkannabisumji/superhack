@@ -22,48 +22,62 @@ contract Staking {
     uint256 public totalStaked;
     uint256 public totalStakers;
 
-    event Staked(address indexed user, uint256 amount, uint256 timestamp);
-    event Unstaked(address indexed user, uint256 amount);
-    event RewardClaimed(address indexed user, uint256 amount);
+    //event Staked(address indexed user, uint256 amount, uint256 timestamp);
+    //event Unstaked(address indexed user, uint256 amount);
+    //event RewardClaimed(address indexed user, uint256 amount);
+
+event Staked(address indexed user, uint256 amount, uint256 timestamp, uint256 blockNumber);
+event Unstaked(address indexed user, uint256 amount, uint256 timestamp, uint256 blockNumber);
+event RewardClaimed(address indexed user, uint256 amount, uint256 timestamp, uint256 blockNumber);
+
 
     constructor(IERC20 _stakingToken) {
         stakingToken = _stakingToken;
     }
 
+
     function stake(uint256 amount) public {
-        require(amount > 0, "Cannot stake 0 tokens");
-        Stake storage userStake = stakes[msg.sender];
-        require(
-            block.timestamp >= userStake.timestamp + lockPeriod,
-            "You can only stake once per week"
-        );
+    require(amount > 0, "Cannot stake 0 tokens");
+    Stake storage userStake = stakes[msg.sender];
+    require(
+        block.timestamp >= userStake.timestamp + lockPeriod,
+        "You can only stake once per week"
+    );
 
-        if (userStake.amount == 0) {
-            totalStakers++;
-        }
-
-        userStake.amount += amount;
-        userStake.timestamp = block.timestamp;
-        totalStaked += amount;
-        stakingToken.safeTransferFrom(msg.sender, address(this), amount);
-        emit Staked(msg.sender, amount, block.timestamp);
+    if (userStake.amount == 0) {
+        totalStakers++;
     }
+
+    userStake.amount += amount;
+    userStake.timestamp = block.timestamp;
+    totalStaked += amount;
+    stakingToken.safeTransferFrom(msg.sender, address(this), amount);
+
+    uint256 blockNumber = block.number;
+
+    emit Staked(msg.sender, amount, block.timestamp, blockNumber);
+}
+
 
     function withdrawStake() public {
-        Stake storage userStake = stakes[msg.sender];
-        require(userStake.amount > 0, "No stake found");
-        require(
-            block.timestamp >= userStake.timestamp + lockPeriod,
-            "Stake is still locked"
-        );
+    Stake storage userStake = stakes[msg.sender];
+    require(userStake.amount > 0, "No stake found");
+    require(
+        block.timestamp >= userStake.timestamp + lockPeriod,
+        "Stake is still locked"
+    );
 
-        uint256 amount = userStake.amount;
-        userStake.amount = 0;
-        totalStaked -= amount;
-        totalStakers--;
-        stakingToken.safeTransfer(msg.sender, amount);
-        emit Unstaked(msg.sender, amount);
-    }
+    uint256 amount = userStake.amount;
+    userStake.amount = 0;
+    totalStaked -= amount;
+    totalStakers--;
+    stakingToken.safeTransfer(msg.sender, amount);
+
+    uint256 blockNumber = block.number;
+
+    emit Unstaked(msg.sender, amount, block.timestamp, blockNumber);
+}
+
 
     function calculateRewards(address user) public view returns (uint256) {
         Stake storage userStake = stakes[user];
@@ -76,21 +90,25 @@ contract Staking {
         return reward;
     }
 
-    function claimRewards() public {
-        Stake storage userStake = stakes[msg.sender];
-        require(userStake.amount > 0, "No stake found");
-        require(
-            block.timestamp >= userStake.lastClaimed + lockPeriod,
-            "You can only claim rewards once per week"
-        );
+   function claimRewards() public {
+    Stake storage userStake = stakes[msg.sender];
+    require(userStake.amount > 0, "No stake found");
+    require(
+        block.timestamp >= userStake.lastClaimed + lockPeriod,
+        "You can only claim rewards once per week"
+    );
 
-        uint256 reward = calculateRewards(msg.sender);
-        require(reward > 0, "No rewards available");
+    uint256 reward = calculateRewards(msg.sender);
+    require(reward > 0, "No rewards available");
 
-        userStake.lastClaimed = block.timestamp;
-        stakingToken.safeTransfer(msg.sender, reward);
-        emit RewardClaimed(msg.sender, reward);
-    }
+    userStake.lastClaimed = block.timestamp;
+    stakingToken.safeTransfer(msg.sender, reward);
+
+    uint256 blockNumber = block.number;
+
+    emit RewardClaimed(msg.sender, reward, block.timestamp, blockNumber);
+}
+
 
     function getStake(address user) public view returns (uint256) {
         return stakes[user].amount;
