@@ -1,16 +1,25 @@
-const hre = require("hardhat");
+async function deployMocks() {
+  const [deployer] = await ethers.getSigners();
 
-async function main() {
-  const [deployer] = await hre.ethers.getSigners();
-  console.log("Deploying contracts with the account:", deployer.address);
+  // Deploy MockERC20 as the primary asset token
+  const MockERC20 = await ethers.getContractFactory("MockERC20");
+  const asset = await MockERC20.deploy("Mock Token", "MTK", 18);
+  await asset.deployed();
 
-  const Governance = await hre.ethers.getContractFactory("Governance");
-  const governance = await Governance.deploy(); // This line already waits for the deployment to be mined
+  // Deploy MockCToken
+  const MockCToken = await ethers.getContractFactory("MockCToken");
+  const cToken = await MockCToken.deploy(asset.address);
+  await cToken.deployed();
 
-  console.log("Governance contract deployed to:", governance.address);
+  // Deploy MockStargateFarm
+  const MockStargateFarm = await ethers.getContractFactory("MockStargateFarm");
+  const stargateFarm = await MockStargateFarm.deploy();
+  await stargateFarm.deployed();
+
+  // Deploy MockStargateRouter
+  const MockStargateRouter = await ethers.getContractFactory("MockStargateRouter");
+  const stargateRouter = await MockStargateRouter.deploy();
+  await stargateRouter.deployed();
+
+  return { asset, cToken, stargateFarm, stargateRouter };
 }
-
-main().catch((error) => {
-  console.error("Error in deployment:", error);
-  process.exit(1);
-});
