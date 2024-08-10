@@ -30,11 +30,13 @@ contract MyContract {
 
         // Read the current price from a price feed.
         bytes32 priceFeedId = 0xff61491a931112ddf1bd8147cd1b641375f79f5825126d665480874634fd0ace; // ETH/USD
-        PythStructs.Price memory price = pyth.getPrice(priceFeedId);
+        uint age = 3;
+        pyth.getPriceNoOlderThan(priceFeedId,age);
     }
 
     function getPrice(bytes32 priceId) public view returns (int64 price, uint64 conf, int32 expo, uint publishTime) {
-        try pyth.getPrice(priceId) returns (PythStructs.Price memory currentBasePrice) {
+        uint age = 3;
+        try pyth.getPriceNoOlderThan(priceId,age) returns (PythStructs.Price memory currentBasePrice) {
             return (
                 currentBasePrice.price,
                 currentBasePrice.conf,
@@ -86,13 +88,12 @@ contract MyContract {
         return getPriceNoOlderThan(priceId, age);
     }
 
-    function updatePriceFeeds(bytes[] memory updateData) public payable returns (bytes32) {
+    function updatePriceFeeds(bytes[] memory updateData) public payable {
         uint256 fee = pyth.getUpdateFee(updateData);
 
         require(msg.value >= fee, "0x025dbdd4 InsufficientFee: The fee provided is less than the required fee.");
 
-        try pyth.updatePriceFeeds{value: fee}(updateData) returns (bytes32 txHash) {
-            return txHash;
+        try pyth.updatePriceFeeds{value: fee}(updateData) {
         } catch Error(string memory reason) {
             if (keccak256(abi.encodePacked(reason)) == keccak256(abi.encodePacked("InvalidUpdateDataSource"))) {
                 revert("0xe60dce71 InvalidUpdateDataSource: Invalid data source of the provided updateData.");
