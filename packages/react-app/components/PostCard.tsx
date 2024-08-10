@@ -23,12 +23,11 @@ function PostCard({
     <article className="mb-4 break-inside p-6 rounded-xl bg-white flex flex-col bg-clip-border">
       <div className="flex items-center justify-between">
         <div className="flex">
-          <a className="inline-block mr-4" href="#">
-            <img
-              className="rounded-full max-w-none w-10 h-10"
-              src="https://randomuser.me/api/portraits/women/9.jpg"
-            />
-          </a>
+          <img
+            className="rounded-full max-w-none w-10 h-10"
+            src="https://randomuser.me/api/portraits/women/9.jpg"
+          />
+
           <div className="flex flex-col">
             <div className="flex items-center">
               <a
@@ -53,12 +52,10 @@ function PostCard({
         </div>
       </div>
       <div className="py-4">
-        <a className="flex" href="#">
-          <img
-            className="max-w-full rounded-lg h-[200px]"
-            src="https://images.pexels.com/photos/61381/pexels-photo-61381.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
-          />
-        </a>
+        <img
+          className="max-w-full rounded-lg h-[200px]"
+          src="https://images.pexels.com/photos/61381/pexels-photo-61381.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260"
+        />
       </div>
       <p>
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod

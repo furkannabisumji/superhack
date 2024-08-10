@@ -73,7 +73,7 @@ const MyProfile = () => {
             )} flex flex-row gap-2 items-center p-2 text-base font-normal text-gray-500 rounded-lg transition duration-75`}
           >
             <LocalGroceryStoreIcon />
-            <h1 className="md:block hidden">MarketPlace</h1>
+            <h1 className="md:block hidden">Products</h1>
           </button>
         </div>
 

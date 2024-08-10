@@ -5,7 +5,7 @@ type Props = {};
 function ProfileCard({}: Props) {
   return (
     <div className="p-3 bg-white rounded-xl ">
-      <div className="flex flex-col p-3 bg-slate-100 rounded-xl">
+      <div className="flex flex-col md:gap-2 p-3 bg-slate-100 rounded-xl">
         <div className="flex flex-row gap-2">
           {/* avatar */}
           <div className="flex -space-x-1 overflow-hidden">

@@ -38,13 +38,13 @@ function SideBarCard({}: Props) {
       </div>
       <div className="flex flex-row gap-5">
         <ShowChartIcon />
-        <Link href="/DAO">
+        <Link href="/Staking">
           <h1>Staking</h1>
         </Link>
       </div>
       <div className="flex flex-row gap-5">
         <AgricultureIcon />
-        <Link href="/DAO">
+        <Link href="/Yield">
           <h1>Yield Farming</h1>
         </Link>
       </div>
