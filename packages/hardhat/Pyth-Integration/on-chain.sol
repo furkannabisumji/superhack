@@ -125,9 +125,9 @@ contract MyContract {
 
     function exampleUpdatePriceFeeds(bytes[] memory updateData) public payable {
         // Call the function and pass the update data
-        bytes32 txHash = updatePriceFeeds(updateData);
+         updatePriceFeeds(updateData);
 
         // Handle the transaction hash (for example, log it)
-        emit PriceFeedsUpdated(txHash);
+        //emit PriceFeedsUpdated(txHash);
     }
 }
