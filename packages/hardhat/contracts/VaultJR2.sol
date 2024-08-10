@@ -11,6 +11,10 @@ import "./interfaces/IStargateFarm.sol";
 import "./interfaces/IStargateRouter.sol";
 
 contract TokenVault is ERC4626, ReentrancyGuard {
+
+    //This version of the contract allows users to borrow up to 50% of the total value of their deposited assets, considering both Compound and Stargate investments as collateral. It includes functions to borrow and repay assets, alongside the necessary events to track these actions. The loan-to-value (LTV) ratio can be adjusted as per your risk management strategy.
+
+
     ICERC20 public cToken;
     IStargateFarm public stargateFarm;
     IStargateRouter public stargateRouter;
@@ -20,6 +24,7 @@ contract TokenVault is ERC4626, ReentrancyGuard {
     mapping(address => uint256) public initialCompoundTimestamp;
     mapping(address => uint256) public initialStargateBalance;
     mapping(address => uint256) public initialStargateTimestamp;
+    mapping(address => uint256) public debts; // Track user debts
     mapping(address => bool) public managers; // Manager control
 
     event DepositedToCompound(address indexed user, uint256 amount);
@@ -27,6 +32,8 @@ contract TokenVault is ERC4626, ReentrancyGuard {
     event DepositedToStargate(address indexed user, uint256 amount);
     event WithdrawnFromStargate(address indexed user, uint256 amount);
     event StrategyRebalanced(uint256 compoundMoved, uint256 stargateMoved);
+    event Borrowed(address indexed user, uint256 amount);
+    event Repaid(address indexed user, uint256 amount);
 
     constructor(
         ERC20 _asset,
@@ -61,6 +68,7 @@ contract TokenVault is ERC4626, ReentrancyGuard {
     }
 
     function withdrawFromCompound(uint256 amount) public {
+        require(initialCompoundBalance[msg.sender] >= amount, "Insufficient balance");
         cToken.redeemUnderlying(amount);
         initialCompoundBalance[msg.sender] -= amount;
         emit WithdrawnFromCompound(msg.sender, amount);
@@ -74,13 +82,25 @@ contract TokenVault is ERC4626, ReentrancyGuard {
     }
 
     function withdrawFromStargate(uint256 lpTokenAmount) public {
-        stargateRouter.removeLiquidity(
-            stargatePoolId,
-            lpTokenAmount,
-            address(this)
-        );
+        require(initialStargateBalance[msg.sender] >= lpTokenAmount, "Insufficient balance");
+        stargateRouter.removeLiquidity(stargatePoolId, lpTokenAmount, address(this));
         initialStargateBalance[msg.sender] -= lpTokenAmount;
         emit WithdrawnFromStargate(msg.sender, lpTokenAmount);
+    }
+
+    function borrow(uint256 amount) public {
+        uint256 collateral = getCompoundBalance() + getStargateBalance(); // Using both balances as collateral
+        require(amount <= collateral / 2, "Amount exceeds half of collateral value"); // 50% LTV
+        debts[msg.sender] += amount;
+        asset.transfer(msg.sender, amount);
+        emit Borrowed(msg.sender, amount);
+    }
+
+    function repay(uint256 amount) public {
+        require(debts[msg.sender] >= amount, "Amount exceeds debt");
+        asset.transferFrom(msg.sender, address(this), amount);
+        debts[msg.sender] -= amount;
+        emit Repaid(msg.sender, amount);
     }
 
     function rebalanceInvestments() public onlyManager {
@@ -104,33 +124,25 @@ contract TokenVault is ERC4626, ReentrancyGuard {
     function calculateCompoundYield() public view returns (uint256) {
         uint256 initialBalance = initialCompoundBalance[msg.sender];
         uint256 currentBalance = getCompoundBalance();
-        uint256 timeElapsed = block.timestamp -
-            initialCompoundTimestamp[msg.sender];
+        uint256 timeElapsed = block.timestamp - initialCompoundTimestamp[msg.sender];
 
         if (initialBalance == 0 || timeElapsed == 0) {
             return 0;
         }
 
-        return
-            (((currentBalance - initialBalance) * 1e18) /
-                initialBalance /
-                timeElapsed) * 365 days;
+        return (((currentBalance - initialBalance) * 1e18) / initialBalance / timeElapsed) * 365 days;
     }
 
     function calculateStargateYield() public view returns (uint256) {
         uint256 initialBalance = initialStargateBalance[msg.sender];
         uint256 currentBalance = getStargateBalance();
-        uint256 timeElapsed = block.timestamp -
-            initialStargateTimestamp[msg.sender];
+        uint256 timeElapsed = block.timestamp - initialStargateTimestamp[msg.sender];
 
         if (initialBalance == 0 || timeElapsed == 0) {
             return 0;
         }
 
-        return
-            (((currentBalance - initialBalance) * 1e18) /
-                initialBalance /
-                timeElapsed) * 365 days;
+        return (((currentBalance - initialBalance) * 1e18) / initialBalance / timeElapsed) * 365 days;
     }
 
     function getCompoundBalance() public view returns (uint256) {
@@ -141,7 +153,6 @@ contract TokenVault is ERC4626, ReentrancyGuard {
         return stargateFarm.checkBalance(stargatePoolId, address(this));
     }
 
-    // Ensuring totalAssets maintains 'view' declaration as it overrides a 'view' function
     function totalAssets() public view override returns (uint256) {
         return getCompoundBalance() + getStargateBalance();
     }
