@@ -21,6 +21,7 @@ interface ISuperformRouter {
     struct SingleDirectSingleVaultStateReq {
         SingleVaultSFData superformData;
     }
+    function provideLiquidity(address token, uint256 amount, address to) external;
 
     function singleDirectSingleVaultDeposit(SingleDirectSingleVaultStateReq calldata req) external;
 }

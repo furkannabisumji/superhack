@@ -2,8 +2,8 @@
 pragma solidity ^0.8.24;
 
 import "solmate/src/mixins/ERC4626.sol";
+// import "@openzeppelin/contracts/token/ERC20/extensions/ERC4626.sol";
 
-// import "@openzeppelin/contracts-upgradeable//security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import "@openzeppelin/contracts/access/Ownable.sol";
@@ -11,215 +11,197 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./interfaces/ICERC20.sol"; // Interface for Compound cToken
 import "./interfaces/ISuperformRouter.sol"; // Interface for SuperformRouter
 
-contract TokenVault is ERC4626, ReentrancyGuard, Ownable {
-    // A mapping that tracks user deposits
+contract TokenVault is ERC4626, ReentrancyGuard {
     mapping(address => uint256) public shareHolder;
-    mapping(address => uint256) public borrowerDebt;
-    mapping(address => uint256) public collateralDeposits;
+    mapping(address => uint256) public debt; // Track borrowed amounts for each user
 
-    // Compound cToken for the asset
     ICERC20 public cToken;
-
-    // SuperformRouter contract
     ISuperformRouter public superformRouter;
+    ERC20 public borrowAsset; // The asset that can be borrowed
+
+    uint256 public constant COLLATERAL_FACTOR = 75; // Example collateral factor of 75%
+    uint256 public constant LIQUIDATION_THRESHOLD = 85; // Example liquidation threshold
+    uint256 private totalSupply; //test
 
     constructor(
         ERC20 _asset,
+        ICERC20 _cToken,
+        ISuperformRouter _superformRouter,
+        ERC20 _borrowAsset,
         string memory _name,
-        string memory _symbol,
-        address _cToken,
-        address _superformRouter
+        string memory _symbol
     ) ERC4626(_asset, _name, _symbol) {
-        cToken = ICERC20(_cToken);
-        superformRouter = ISuperformRouter(_superformRouter);
+        cToken = _cToken;
+        superformRouter = _superformRouter;
+        borrowAsset = _borrowAsset;
     }
 
     /**
-     * @notice Function to deposit assets and receive vault tokens in exchange
-     * @param _assets Amount of the asset token
+     * @notice function to deposit assets and receive vault tokens in exchange
+     * @param _assets amount of the asset token
      */
-    function _deposit(uint256 _assets) public nonReentrant {
-        require(_assets > 0, "Deposit must be greater than zero");
+    function _deposit(uint _assets) public nonReentrant {
+        require(_assets > 0, "Deposit less than Zero");
 
-        // Transfer assets to this contract
+        // Transfer asset from user to vault
         asset.transferFrom(msg.sender, address(this), _assets);
 
-        // Approve assets for Compound
+        // Deposit into Compound
         asset.approve(address(cToken), _assets);
+        require(cToken.mint(_assets) == 0, "Compound deposit failed");
 
-        // Supply assets to Compound
-        require(cToken.mint(_assets) == 0, "Compound mint failed");
+        // Update the total supply of vault tokens
+        totalSupply += _assets;
 
-        // Mint vault tokens to the depositor
         deposit(_assets, msg.sender);
-
-        // Increase the share of the user
         shareHolder[msg.sender] += _assets;
     }
 
     /**
      * @notice Function to allow msg.sender to withdraw their deposit plus accrued interest
-     * @param _shares Amount of shares the user wants to convert
-     * @param _receiver Address of the user who will receive the assets
+     * @param _shares amount of shares the user wants to convert
+     * @param _receiver address of the user who will receive the assets
      */
-    function _withdraw(uint256 _shares, address _receiver) public nonReentrant {
-        require(_shares > 0, "Withdraw must be greater than zero");
-        require(_receiver != address(0), "Zero address");
-        require(shareHolder[msg.sender] > 0, "Not a shareholder");
+    function _withdraw(uint _shares, address _receiver) public nonReentrant {
+        require(_shares > 0, "withdraw must be greater than Zero");
+        require(_receiver != address(0), "Zero Address");
+        require(shareHolder[msg.sender] > 0, "Not a share holder");
         require(shareHolder[msg.sender] >= _shares, "Not enough shares");
 
-        // Calculate assets to withdraw
-        uint256 assetsToWithdraw = _shares + calculateInterest(_shares);
+        // Calculate the amount of cTokens needed
+        uint256 cTokensRequired = (_shares * cToken.exchangeRateStored()) /
+            1e18;
 
-        // Redeem assets from Compound
+        // Redeem cTokens for underlying asset
         require(
-            cToken.redeemUnderlying(assetsToWithdraw) == 0,
-            "Compound redeem failed"
+            cToken.redeem(cTokensRequired) == 0,
+            "Compound redemption failed"
         );
 
-        // Transfer assets to the receiver
-        asset.transfer(_receiver, assetsToWithdraw);
-
-        // Burn vault tokens
-        redeem(assetsToWithdraw, _receiver, msg.sender);
-
-        // Decrease the share of the user
+        uint256 assets = asset.balanceOf(address(this));
+        redeem(assets, _receiver, msg.sender);
         shareHolder[msg.sender] -= _shares;
+
+        // Update the total supply of vault tokens
+        totalSupply -= _shares;
     }
 
     /**
-     * @notice Function to borrow assets from the vault
-     * @param _amount The amount of assets to borrow
-     * @param _collateral The collateral amount required to borrow
+     * @notice Borrow and earn function using collateral in Compound
+     * @param borrowAmount The amount of the borrow asset to borrow
      */
-    function borrow(uint256 _amount, uint256 _collateral) public nonReentrant {
+    function borrowAndEarn(uint256 borrowAmount) public {
+        // Check user's collateral value
+        uint256 collateralValue = calculateCollateralValue(msg.sender);
+
+        // Ensure sufficient collateral
         require(
-            _collateral >= (_amount * 150) / 100,
+            collateralValue >= (borrowAmount * 1e18) / COLLATERAL_FACTOR,
             "Insufficient collateral"
         );
 
-        // Transfer collateral from borrower to the vault
-        asset.transferFrom(msg.sender, address(this), _collateral);
-        collateralDeposits[msg.sender] += _collateral;
+        // Borrow asset using Compound
+        require(cToken.borrow(borrowAmount) == 0, "Compound borrow failed");
 
-        // Approve collateral to Compound
-        asset.approve(address(cToken), _collateral);
+        // Record debt
+        debt[msg.sender] += borrowAmount;
 
-        // Supply collateral to Compound
-        require(cToken.mint(_collateral) == 0, "Compound mint failed");
-
-        // Borrow assets from Compound
-        require(cToken.borrow(_amount) == 0, "Compound borrow failed");
-
-        // Transfer borrowed amount to the borrower
-        asset.transfer(msg.sender, _amount);
-        borrowerDebt[msg.sender] += _amount;
-    }
-
-    /**
-     * @notice Function to repay borrowed assets
-     * @param _amount The amount of assets to repay
-     */
-    function repay(uint256 _amount) public nonReentrant {
-        require(_amount > 0, "Repay amount must be greater than zero");
-
-        // Transfer the repayment amount from the borrower to the vault
-        asset.transferFrom(msg.sender, address(this), _amount);
-
-        // Approve repayment to Compound
-        asset.approve(address(cToken), _amount);
-
-        // Repay the loan in Compound
-        require(cToken.repayBorrow(_amount) == 0, "Compound repay failed");
-
-        // Update borrower's debt
-        borrowerDebt[msg.sender] -= _amount;
-
-        // If debt is cleared, release collateral
-        if (borrowerDebt[msg.sender] == 0) {
-            uint256 collateralToReturn = collateralDeposits[msg.sender];
-            collateralDeposits[msg.sender] = 0;
-            require(
-                cToken.redeemUnderlying(collateralToReturn) == 0,
-                "Compound redeem failed"
-            );
-            asset.transfer(msg.sender, collateralToReturn);
-        }
-    }
-
-    /**
-     * @notice Function to deposit tokens using Superform's singleDirectSingleVaultDeposit
-     * @param superformData The data required for the Superform deposit
-     */
-    function superformDeposit(
-        SingleVaultSFData memory superformData
-    ) external nonReentrant {
-        // Ensure tokens are approved for the SuperformRouter
-        asset.approve(address(superformRouter), superformData.amount);
-
-        // Perform the deposit via SuperformRouter
-        superformRouter.singleDirectSingleVaultDeposit(
-            SingleDirectSingleVaultStateReq({superformData: superformData})
+        // Use borrowed asset in Superform for earning yield
+        borrowAsset.approve(address(superformRouter), borrowAmount);
+        superformRouter.provideLiquidity(
+            address(borrowAsset),
+            borrowAmount,
+            msg.sender
         );
     }
 
     /**
-     * @notice Function to earn interest on assets
+     * @notice Repay borrowed assets
+     * @param repayAmount The amount of the borrowed asset to repay
      */
-    function earn() public nonReentrant onlyOwner {
-        // Calculate total interest earned
-        uint256 totalInterest = calculateTotalInterest();
+    function repayBorrow(uint256 repayAmount) public {
+        // Transfer repay amount from user to vault
+        borrowAsset.transferFrom(msg.sender, address(this), repayAmount);
 
-        // Distribute earnings to shareholders
-        uint256 totalShares = totalSupply();
-        address[] memory shareholders = getAllShareholders(); // Ensure this function returns address[]
-        for (uint i = 0; i < shareholders.length; i++) {
-            address shareholder = shareholders[i];
-            uint256 share = shareHolder[shareholder];
-            uint256 earnings = (totalInterest * share) / totalShares;
-            asset.transfer(shareholder, earnings);
-        }
-        
+        // Repay borrowed amount to Compound
+        require(cToken.repayBorrow(repayAmount) == 0, "Repayment failed");
+
+        // Reduce debt
+        debt[msg.sender] -= repayAmount;
     }
 
-    // Helper function to calculate interest for a given amount
-    function calculateInterest(
-        uint256 _amount
-    ) internal view returns (uint256) {
-        uint256 cTokenBalance = cToken.balanceOfUnderlying(address(this));
-        uint256 principal = totalAssets();
-        if (cTokenBalance > principal) {
-            uint256 interest = cTokenBalance - principal;
-            return (_amount * interest) / principal;
-        }
-        return 0;
+    /**
+     * @notice Check and handle potential liquidation
+     */
+    function checkAndHandleLiquidation(address user) public {
+        uint256 collateralValue = calculateCollateralValue(user);
+        uint256 borrowValue = debt[user];
+
+        // If the borrow value exceeds the liquidation threshold, perform liquidation
+        require(
+            borrowValue > (collateralValue * LIQUIDATION_THRESHOLD) / 100,
+            "No liquidation needed"
+        );
+
+        // Logic for liquidation: Sell a portion of the collateral to repay the debt
+        uint256 liquidationAmount = ((borrowValue -
+            (collateralValue * LIQUIDATION_THRESHOLD) /
+            100) * 100) / LIQUIDATION_THRESHOLD;
+        require(cToken.redeem(liquidationAmount) == 0, "Liquidation failed");
+
+        // Repay the debt with the liquidation proceeds
+        require(cToken.repayBorrow(liquidationAmount) == 0, "Repayment failed");
+        debt[user] -= liquidationAmount;
     }
 
-    // Helper function to calculate total interest earned by the vault
-    function calculateTotalInterest() internal view returns (uint256) {
-        uint256 cTokenBalance = cToken.balanceOfUnderlying(address(this));
-        uint256 principal = totalAssets();
-        if (cTokenBalance > principal) {
-            return cTokenBalance - principal;
-        }
-        return 0;
+    /**
+     * @notice Calculate collateral value of a user
+     * @param user The address of the user
+     * @return The calculated collateral value
+     */
+    function calculateCollateralValue(
+        address user
+    ) public view returns (uint256) {
+        uint256 userShares = shareHolder[user];
+        uint256 cTokensBalance = (cToken.balanceOfUnderlying(address(this)) *
+            userShares) / totalAssets();
+        uint256 collateralValue = (cTokensBalance *
+            cToken.exchangeRateStored()) / 1e18;
+        return collateralValue;
     }
 
-    // Returns the total number of assets
+    /**
+     * @notice Calculate the current yield of the strategy
+     * @return The calculated yield as a percentage
+     */
+    function calculateYield() public view returns (uint256) {
+        uint256 initialAssets = totalAssets(); // The initial deposit value
+        uint256 currentAssets = asset.balanceOf(address(this)); // Current asset balance
+        uint256 totalCtokens = cToken.balanceOf(address(this)); // Total cTokens representing interest
+
+        // Calculate current value including cTokens converted back to underlying assets
+        uint256 cTokensValue = (totalCtokens * cToken.exchangeRateStored()) /
+            1e18;
+        uint256 currentValue = currentAssets + cTokensValue;
+
+        // Calculate the yield
+        if (initialAssets == 0) {
+            return 0; // Avoid division by zero
+        }
+
+        uint256 yield = ((currentValue - initialAssets) * 100) / initialAssets;
+        return yield;
+    }
+
     function totalAssets() public view override returns (uint256) {
         return asset.balanceOf(address(this));
     }
 
-    // Returns the total balance of a user
     function totalAssetsOfUser(address _user) public view returns (uint256) {
         return asset.balanceOf(_user);
     }
 
-    // Helper function to get all shareholders (this should be implemented based on your specific requirements)
-    function getAllShareholders() internal view returns (address[] memory) {
-        // Implement logic to keep track of all shareholders
-        // This is a placeholder and needs a proper implementation
-        address[] memory shareholders; // Replace with actual logic
-        return shareholders;
+    function _totalSupply() public view returns (uint256) {
+        return totalSupply;
     }
 }
