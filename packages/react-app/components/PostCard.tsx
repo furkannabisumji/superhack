@@ -20,7 +20,7 @@ function PostCard({
   style = "",
 }: Props) {
   return (
-    <article className="mb-4 break-inside p-6 rounded-xl bg-white dark:bg-slate-800 flex flex-col bg-clip-border">
+    <article className="mb-4 break-inside p-6 rounded-xl bg-white flex flex-col bg-clip-border">
       <div className="flex items-center justify-between">
         <div className="flex">
           <a className="inline-block mr-4" href="#">

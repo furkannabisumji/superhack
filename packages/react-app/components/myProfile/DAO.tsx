@@ -1,164 +1,166 @@
 import { Chip, LinearProgress } from "@mui/material";
 import Link from "next/link";
 
-import React, { useEffect, useState } from 'react';
-import { ethers } from 'ethers';
-import Governance from '../artifacts/contracts/Governance.sol/Governance.json';
+import React, { useEffect, useState } from "react";
+import { Contract, ethers } from "ethers";
+// import Governance from '../artifacts/contracts/Governance.sol/Governance.json';
 // import Governance from '../../hardhat/artifacts/contracts/Governance.sol/Governance.json'; // Update the path as necessary
-
 
 type Props = {};
 
 function DAO({}: Props) {
-
-  const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
+  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
   const [signer, setSigner] = useState<ethers.Signer | null>(null);
   const [contract, setContract] = useState<Contract | null>(null);
 
-  const contractABI =  [
+  const contractABI = [
     {
-      "inputs": [],
-      "stateMutability": "nonpayable",
-      "type": "constructor"
+      inputs: [],
+      stateMutability: "nonpayable",
+      type: "constructor",
     },
     {
-      "stateMutability": "payable",
-      "type": "fallback"
+      stateMutability: "payable",
+      type: "fallback",
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "uint256",
-          "name": "_pId",
-          "type": "uint256"
+          internalType: "uint256",
+          name: "_pId",
+          type: "uint256",
         },
         {
-          "internalType": "enum Governance.VoteState",
-          "name": "_voteState",
-          "type": "uint8"
-        }
+          internalType: "enum Governance.VoteState",
+          name: "_voteState",
+          type: "uint8",
+        },
       ],
-      "name": "approveProposal",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      name: "approveProposal",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
     },
     {
-      "inputs": [],
-      "name": "claimOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      inputs: [],
+      name: "claimOwnership",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
     },
     {
-      "inputs": [],
-      "name": "getAllProposals",
-      "outputs": [
+      inputs: [],
+      name: "getAllProposals",
+      outputs: [
         {
-          "components": [
+          components: [
             {
-              "internalType": "uint256",
-              "name": "id",
-              "type": "uint256"
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
             },
             {
-              "internalType": "address",
-              "name": "initiator",
-              "type": "address"
+              internalType: "address",
+              name: "initiator",
+              type: "address",
             },
             {
-              "internalType": "string",
-              "name": "description",
-              "type": "string"
+              internalType: "string",
+              name: "description",
+              type: "string",
             },
             {
-              "internalType": "uint256",
-              "name": "timestamp",
-              "type": "uint256"
+              internalType: "uint256",
+              name: "timestamp",
+              type: "uint256",
             },
             {
-              "components": [
+              components: [
                 {
-                  "internalType": "address",
-                  "name": "user",
-                  "type": "address"
+                  internalType: "address",
+                  name: "user",
+                  type: "address",
                 },
                 {
-                  "internalType": "enum Governance.VoteState",
-                  "name": "vote",
-                  "type": "uint8"
-                }
+                  internalType: "enum Governance.VoteState",
+                  name: "vote",
+                  type: "uint8",
+                },
               ],
-              "internalType": "struct Governance.Vote[]",
-              "name": "votes",
-              "type": "tuple[]"
-            }
+              internalType: "struct Governance.Vote[]",
+              name: "votes",
+              type: "tuple[]",
+            },
           ],
-          "internalType": "struct Governance.Proposal[]",
-          "name": "",
-          "type": "tuple[]"
-        }
+          internalType: "struct Governance.Proposal[]",
+          name: "",
+          type: "tuple[]",
+        },
       ],
-      "stateMutability": "view",
-      "type": "function"
+      stateMutability: "view",
+      type: "function",
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "string",
-          "name": "_description",
-          "type": "string"
-        }
+          internalType: "string",
+          name: "_description",
+          type: "string",
+        },
       ],
-      "name": "initiateProposal",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      name: "initiateProposal",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
     },
     {
-      "inputs": [
+      inputs: [
         {
-          "internalType": "address",
-          "name": "_newOwner",
-          "type": "address"
-        }
+          internalType: "address",
+          name: "_newOwner",
+          type: "address",
+        },
       ],
-      "name": "transferOwnerShip",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
+      name: "transferOwnerShip",
+      outputs: [],
+      stateMutability: "nonpayable",
+      type: "function",
     },
     {
-      "stateMutability": "payable",
-      "type": "receive"
-    }
-  ]
+      stateMutability: "payable",
+      type: "receive",
+    },
+  ];
 
-   // Function to initialize the contract
-   useEffect(() => {
+  // Function to initialize the contract
+  useEffect(() => {
     const init = async () => {
       // First, let's make sure the user has MetaMask installed
-      if (typeof window.ethereum !== 'undefined') {
+      if (typeof window.ethereum !== "undefined") {
         // Use MetaMask's provider
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const provider = new ethers.BrowserProvider(window.ethereum);
         const signer = provider.getSigner();
         const contract = new ethers.Contract(
-          '0xe4Bb30189ad42E76C7AB41d5921D500b2d723cBD',
+          "0xe4Bb30189ad42E76C7AB41d5921D500b2d723cBD",
           contractABI,
-          signer
+          await signer
         );
-        
+
         setProvider(provider);
-        setSigner(signer);
+        setSigner(await signer);
         setContract(contract);
+        console.log(contract.initiateProposal);
       } else {
         console.log("Please install MetaMask to interact with this app.");
       }
     };
 
     init();
-  }, []);
+  }, [contract]);
 
+  // const getonProposals: any() {
+  //   contract.getAllProposals
+  // }
 
   return (
     <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
@@ -167,6 +169,7 @@ function DAO({}: Props) {
           <h1 className="text-3xl">Our Governance</h1>
           <div className="text-sm">
             <p>
+              {}
               Following the request for proposal (RFP) from NEW (Network
               Expansion WorkGroup) that concluded on Decemeber 5th, 2023 there
               are 4 eligible submissions to developer wstEth brige on BNB

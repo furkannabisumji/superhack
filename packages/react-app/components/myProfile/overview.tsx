@@ -4,18 +4,18 @@ type Props = {};
 
 function Overview({}: Props) {
   return (
-    <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
+    <div className="bg-white md:mx-auto rounded shadow-xl w-full pr-2 md:w-full md:overflow-hidden ">
       <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500"></div>
-      <div className="px-5 py-2 flex flex-col gap-3 pb-6">
-        <div className="h-[90px] shadow-md w-[90px] rounded-full border-4 overflow-hidden -mt-14 border-white">
+      <div className="md:px-5 px-2 md:py-2 flex flex-col gap-3 pb-6">
+        <div className="md:h-[90px] h-[50px] w-[50px] shadow-md md:w-[90px] rounded-full border-4 overflow-hidden -mt-14 border-white">
           <img
             src="https://randomuser.me/api/portraits/women/9.jpg"
             className="w-full h-full rounded-full object-center object-cover"
           />
         </div>
-        <div className="flex flex-row justify-between gap-2">
+        <div className="flex flex-col md:flex-row justify-between gap-2">
           <div className="">
-            <h3 className="text-xl text-slate-900 relative font-bold leading-6">
+            <h3 className="md:text-xl text-md text-slate-900 relative font-bold leading-6">
               Dadda Hicham
             </h3>
             <p className="text-sm text-gray-600">@daddasoft</p>

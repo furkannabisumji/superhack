@@ -1,5 +1,7 @@
 import PostCard from "@/components/PostCard";
 import ProductCard from "@/components/ProductCard";
+import LeftSide from "@/components/refactors/leftSide";
+import RightSide from "@/components/refactors/rightSide";
 import Link from "next/link";
 import React, { SetStateAction, useState } from "react";
 
@@ -9,8 +11,11 @@ const UserProfile = () => {
   const checkActive = (index: number, className: any) =>
     activeIndex === index ? className : "";
   return (
-    <div>
-      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-2/3 overflow-hidden -mt-10">
+    <div className="flex flex-row gap-10">
+      <div className="w-1/6">
+        <LeftSide />
+      </div>
+      <div className="bg-white md:mx-auto rounded shadow-xl w-full md:w-3/5 overflow-hidden -mt-10">
         <div className="h-[140px] bg-gradient-to-r from-slate-400 to-slate-500"></div>
         <div className="px-5 py-2 flex flex-col gap-3 pb-6">
           <div className="h-[90px] shadow-md w-[90px] rounded-full border-4 overflow-hidden -mt-14 border-white">
@@ -121,6 +126,9 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="w-1/5 mt-10">
+        <RightSide />
       </div>
     </div>
   );
