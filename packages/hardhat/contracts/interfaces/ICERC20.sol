@@ -8,7 +8,7 @@ interface ICERC20 {
     function borrow(uint borrowAmount) external returns (uint);
     function repayBorrow(uint repayAmount) external returns (uint);
     function exchangeRateStored() external view returns (uint);
-    function balanceOfUnderlying(address owner) external returns (uint);
+    function balanceOfUnderlying(address owner) external view returns (uint);
     function balanceOf(address account) external view returns (uint256);
     function redeemUnderlying(uint redeemAmount) external returns (uint);
 
