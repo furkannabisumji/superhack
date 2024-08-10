@@ -121,7 +121,7 @@ const MyProfile = () => {
           </button>
         </div>
       </div>
-      <div className="flex md:left-56 w-5/6">
+      <div className="flex ml-20 md:ml-60 w-5/6">
         <div className={`pageContent ${checkActive(1, "active")}`}>
           <div>
             <Overview />
