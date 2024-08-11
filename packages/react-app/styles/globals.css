@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .tab {
-    color: black;
+    color: #6b7280 ;
     background-color: white;
     border-width: 1px;
     border-color: rgb(158, 157, 157);
@@ -11,7 +11,7 @@
     padding-inline: 1rem;
     padding-block: 0.5rem;
     font-weight: bold;
-    font-size: 10px;
+    font-size: 15px;
 }
 .tab.active {
     border-width: 0;
@@ -29,4 +29,18 @@
 .nav.active {
     border-width: 0;
     background-color: greenyellow;
+}
+
+@media only screen and (max-width: 425px){
+    .tab {
+    border-radius: 0.5rem;
+    padding-inline: 2px;
+    padding-block: 1.5px;
+    font-weight: bold;
+    font-size: 10px;
+    }
+    .tab.active {
+        border-width: 0;
+        background-color: greenyellow
+    }
 }

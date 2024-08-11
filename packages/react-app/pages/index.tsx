@@ -16,13 +16,19 @@ import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
 import CurrencyBitcoinIcon from "@mui/icons-material/CurrencyBitcoin";
 import CreatePost from "@/components/CreatePost";
 import { Dialog, DialogTitle } from "@mui/material";
+import { useConnect } from "wagmi";
+import { injected } from "wagmi/connectors";
+import ProfileCard from "@/components/profileCard";
+import SideBarCard from "@/components/sideBarCard";
+import LeftSide from "@/components/refactors/leftSide";
+import RightSide from "@/components/refactors/rightSide";
 
 export default function Home() {
   // const [account] = useState([]);
 
   // uncomment the line below and comment the line above to see the sign up page
 
-  const [account, setAccount] = useState<boolean>();
+  const [account, setAccount] = useState<boolean>(true);
 
   // const { account } = useSocialConnect();
 
@@ -42,6 +48,15 @@ export default function Home() {
   const handleModal2Close = (value: string) => {
     setModal2Open(false);
   };
+
+  const { connect, isSuccess } = useConnect();
+
+  useEffect(() => {
+    if (isSuccess) {
+      setOpen(false);
+      setModal2Open(true);
+    }
+  }, [isSuccess]);
 
   // worldId functions
 
@@ -68,13 +83,13 @@ export default function Home() {
   };
 
   return (
-    <main className="flex flex-col mt-10 px-10">
+    <main className="flex flex-col mt-10 md:px-10 h-screen">
       {!account ? (
-        <div className="flex flex-row gap-10">
+        <div className="flex flex-col md:flex-row gap-10 overflow-hidden ">
           {/* left */}
-          <div className="bg-slate-300 p-10 w-1/4 rounded-xl flex flex-col gap-20">
+          <div className="bg-white p-10 md:w-1/4 rounded-xl flex flex-col gap-20 shadow-xl">
             <div>
-              <h1 className="text-3xl text-black">
+              <h1 className="md:text-3xl sm:text-lg font-semibold text-black">
                 Connect with your audience
               </h1>
             </div>
@@ -88,136 +103,141 @@ export default function Home() {
               {({ open }) => (
                 // This is the button that will open the IDKit modal
                 <button
-                  className="rounded-full border border-slate-500 bg-white hover:bg-slate-500 hover:text-white  py-1.5 px-5 text-black transition-all text-center text-sm font-inter flex items-center justify-center"
+                  className="rounded-full border  bg-black text-white p-3  md:py-1.5 md:px-5 transition-all text-center text-sm md:text-sm font-inter flex items-center justify-center"
                   onClick={open}
                 >
-                  Verify with World ID
+                  Sign In with World ID
                 </button>
               )}
             </IDKitWidget>
           </div>
           {/* right */}
-          <div className="bg-slate-300 p-10 w-3/4 rounded-xl flex flex-col gap-20 text-black">
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <HubIcon height={100} width={100} />
-                </div>
-                <h1 className="text-2xl">88</h1>
+          <div className="bg-white p-10 md:w-3/4 rounded-xl flex flex-col justify-between gap-20 text-black shadow-2xl">
+            <div className="flex md:flex-row flex-col gap-20">
+              <div className="flex flex-col gap-10 justify-between">
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <HubIcon height={160} width={160} />
+                  </div>
 
-                <p>For Flowbite, with zero maintenance downtime</p>
+                  <p className="text-xl">
+                    A hub for web3 creators to socialize
+                  </p>
+                </div>
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <HttpsIcon height={160} width={160} />
+                  </div>
+
+                  <p className="text-xl">
+                    Authenticated with world ID to ensure Transparency
+                  </p>
+                </div>
               </div>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <HttpsIcon height={100} width={100} />
+
+              <div className="flex flex-col gap-10 justify-between">
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <LocalGroceryStoreIcon height={160} width={160} />
+                  </div>
+
+                  <p className="text-xl">
+                    A marketplace to sell and purchase NFTs
+                  </p>
                 </div>
-                <h1 className="text-2xl">88</h1>
+                <div className="flex flex-col gap-3">
+                  <div>
+                    <CurrencyBitcoinIcon height={160} width={160} />
+                  </div>
 
-                <p>For Flowbite, with zero maintenance downtime</p>
-              </div>
-            </div>
-
-            <div className="flex flex-row justify-between">
-              <div className="flex flex-col gap-3">
-                <div>
-                  <LocalGroceryStoreIcon height={100} width={100} />
+                  <p className="text-xl">Get updates on Crypto News and more</p>
                 </div>
-                <h1 className="text-2xl">88</h1>
-
-                <p>For Flowbite, with zero maintenance downtime</p>
-              </div>
-              <div className="flex flex-col gap-3">
-                <div>
-                  <CurrencyBitcoinIcon height={100} width={100} />
-                </div>
-                <h1 className="text-2xl">88</h1>
-
-                <p>For Flowbite, with zero maintenance downtime</p>
               </div>
             </div>
           </div>
         </div>
       ) : (
-        <div className="flex flex-row gap-20 relative">
-          <Dialog onClose={handleClose} open={open}>
-            <DialogTitle>Connect Wallet</DialogTitle>
-            <div className="flex flex-col gap-2 p-5 mt-2">
-              <ConnectButton
-                showBalance={{ smallScreen: true, largeScreen: false }}
-              />
+        <div className="flex md:flex-row flex-col gap-20 relative">
+          <Dialog onClose={handleClose} open={open} className="">
+            <DialogTitle className="md:text-3xl sm:text-lg font-semibold text-black">
+              Connect Wallet
+            </DialogTitle>
+            <div className="flex flex-col gap-5 p-5 mt-2 w-[200px]">
+              <p className="text-lg">
+                Connect your wallet for a better experience!
+              </p>
+              <button
+                className="rounded-full border  bg-black text-white p-3  md:py-1.5 md:px-5 transition-all text-center text-sm md:text-sm font-inter flex items-center justify-center"
+                onClick={() =>
+                  connect({ connector: injected({ target: "metaMask" }) })
+                }
+              >
+                Connect
+              </button>
             </div>
           </Dialog>
 
           <Dialog onClose={handleModal2Close} open={modal2Open}>
-            <DialogTitle>Set up your user name</DialogTitle>
+            <DialogTitle className="md:text-2xl sm:text-lg font-semibold text-black">
+              Set up your user name
+            </DialogTitle>
             <div className="flex flex-col gap-2 p-5 mt-2">
               <input
                 id="username"
                 name="username"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 defaultValue={""}
               />
-              <ConnectButton
-                showBalance={{ smallScreen: true, largeScreen: false }}
-              />
+
               <button
                 type="button"
                 data-autofocus
                 onClick={() => {
-                  handleModal2Close;
+                  // back end done here
+                  setModal2Open(false);
                 }}
-                className="rounded-full border border-slate-500 bg-white  py-1.5 px-5 text-black transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
+                className="rounded-full border  bg-black text-white p-3  md:py-1.5 md:px-5 transition-all text-center text-sm md:text-sm font-inter flex items-center justify-center"
               >
                 Continue to App
               </button>
             </div>
           </Dialog>
           {/* left panel */}
-
-          {/* fetches users on the platform */}
-          <div className="flex flex-col gap-10 w-1/6 min-h-screen fixed top-32 left-5 bottom-0 border-r-2 pr-2 border-white">
-            <div className="text-2xl text-white">Suggested</div>
-
-            <UserCard
-              userName="user"
-              onUserClick={() => {}}
-              onFollowButtonClick={() => {}}
-            />
-            <UserCard
-              userName="user"
-              onUserClick={() => {}}
-              onFollowButtonClick={() => {}}
-            />
-            <UserCard
-              userName="user"
-              onUserClick={() => {}}
-              onFollowButtonClick={() => {}}
-            />
-          </div>
-
+          <LeftSide />
           {/* feed */}
 
           {/* fetches available posts */}
-          <div className="flex flex-col gap-10 w-3/5 ml-56">
-            <div className="flex flex-row gap-5 fixed left-0 -mt-16 bg-slate-500 border border-slate-500 rounded-t-none rounded-xl p-3">
-              <button
-                className={`tab ${checkActive(1, "active")}`}
-                onClick={() => handleClick(1)}
-              >
-                Feed
-              </button>
-              <button
-                className={`tab ${checkActive(2, "active")}`}
-                onClick={() => handleClick(2)}
-              >
-                Following
-              </button>
-              <button
-                className={`tab ${checkActive(3, "active")}`}
-                onClick={() => handleClick(3)}
-              >
-                Subscribed
-              </button>
+          <div className="flex flex-col gap-5 md:gap-10 w-full px-2 py-2 md:w-4/5 ml-0 md:ml-56">
+            <div className="flex flex-row justify-between -mt-16  md:-mt-16 bg-white border rounded-xl p-1 md:p-3">
+              <div className="flex flex-row gap-3 md:gap-5">
+                <button
+                  className={`tab ${checkActive(1, "active")}`}
+                  onClick={() => handleClick(1)}
+                >
+                  Feed
+                </button>
+                <button
+                  className={`tab ${checkActive(2, "active")}`}
+                  onClick={() => handleClick(2)}
+                >
+                  Following
+                </button>
+                <button
+                  className={`tab ${checkActive(3, "active")}`}
+                  onClick={() => handleClick(3)}
+                >
+                  Subscribed
+                </button>
+              </div>
+
+              <div>
+                <CreatePost
+                  post={""}
+                  likes={0}
+                  comments={[]}
+                  onCreatePostClick={() => {}}
+                />
+              </div>
             </div>
 
             <div className={`pageContent ${checkActive(1, "active")}`}>
@@ -243,110 +263,7 @@ export default function Home() {
           </div>
 
           {/* right panel */}
-
-          {/* live crypto data */}
-
-          <div className="fixed right-0 flex flex-col gap-10 w-1/5">
-            <div className="shadow-md rounded-md mx-auto max-w-sm6 text-white">
-              <h2 className="text-xl font-semibold mb-4 ">Top Crypto</h2>
-              <ul>
-                <li className="flex items-center justify-between py-2 border-b border-gray-300">
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-4">1</span>
-                    <img
-                      src="https://via.placeholder.com/48"
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full mr-4"
-                    />
-                    <span className="font-semibold">BitCoin</span>
-                  </div>
-                  <span className="text-green-500 font-semibold">
-                    1000 Points
-                  </span>
-                </li>
-                <li className="flex items-center justify-between py-2 border-b border-gray-300">
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-4">2</span>
-                    <img
-                      src="https://via.placeholder.com/48"
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full mr-4"
-                    />
-                    <span className=" font-semibold">ETH</span>
-                  </div>
-                  <span className="text-green-500 font-semibold">
-                    950 Points
-                  </span>
-                </li>
-                <li className="flex items-center justify-between py-2 border-b border-gray-300">
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-4">3</span>
-                    <img
-                      src="https://via.placeholder.com/48"
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full mr-4"
-                    />
-                    <span className=" font-semibold">Tether</span>
-                  </div>
-                  <span className="text-green-500 font-semibold">
-                    850 Points
-                  </span>
-                </li>
-                <li className="flex items-center justify-between py-2 border-b border-gray-300">
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-4">4</span>
-                    <img
-                      src="https://via.placeholder.com/48"
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full mr-4"
-                    />
-                    <span className=" font-semibold">USD</span>
-                  </div>
-                  <span className="text-green-500 font-semibold">
-                    800 Points
-                  </span>
-                </li>
-                <li className="flex items-center justify-between gap-2 py-2">
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-4">5</span>
-                    <img
-                      src="https://via.placeholder.com/48"
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full mr-4"
-                    />
-                    <span className=" font-semibold">Binance</span>
-                  </div>
-                  <span className="text-green-500 font-semibold">
-                    750 Points
-                  </span>
-                </li>
-                <li className="flex items-center justify-between gap-2 py-2">
-                  <div className="flex items-center">
-                    <span className="text-lg font-semibold mr-4">6</span>
-                    <img
-                      src="https://via.placeholder.com/48"
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full mr-4"
-                    />
-                    <span className=" font-semibold">Solana</span>
-                  </div>
-                  <span className="text-green-500 font-semibold">
-                    750 Points
-                  </span>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <CreatePost
-                className="justify-end"
-                post={""}
-                likes={0}
-                comments={[]}
-                onCreatePostClick={() => {}}
-              />
-            </div>
-          </div>
+          <RightSide />
         </div>
       )}
     </main>
