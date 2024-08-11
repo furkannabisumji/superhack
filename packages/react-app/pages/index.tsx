@@ -29,7 +29,7 @@ export default function Home() {
 
   // uncomment the line below and comment the line above to see the sign up page
 
-  const [account, setAccount] = useState<boolean>(true);
+  const [account, setAccount] = useState<boolean>();
   const [username, setUsername] = useState<string>("true");
 
   // const { account } = useSocialConnect();
