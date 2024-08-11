@@ -95,17 +95,17 @@ const Staking = () => {
               <h2>Total value locked</h2>
               <h1>{totalStaked} Tokens</h1>
             </div>
-            {/* <div className="flex flex-col md:min-w-32 gap-2 border bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 text-[12px] text-white rounded-xl px-4 py-2">
+             <div className="flex flex-col md:min-w-32 gap-2 border bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 text-[12px] text-white rounded-xl px-4 py-2">
            <h2>Points generated</h2>
-         </div> */}
+         </div> 
             <div className="flex flex-col md:min-w-32 gap-2 border bg-slate-500  text-[12px] text-white rounded-xl px-4 py-2">
               <h2>APY Rate</h2>
               <h1>{apyRate}%</h1>
             </div>
-            {/* <div className="flex flex-col md:min-w-32 gap-2 border bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 text-[12px] text-white rounded-xl px-4 py-2">
+             <div className="flex flex-col md:min-w-32 gap-2 border bg-gradient-to-r from-amber-500 via-orange-600 to-yellow-500 text-[12px] text-white rounded-xl px-4 py-2">
            <h2>stakers</h2>
            <h1>9,574</h1>
-         </div> */}
+         </div> 
           </div>
         </div>
 
