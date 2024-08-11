@@ -1,3 +1,12 @@
+import HouseIcon from "@mui/icons-material/House";
+import LocalGroceryStoreIcon from "@mui/icons-material/LocalGroceryStore";
+import AccountBalanceIcon from "@mui/icons-material/AccountBalance";
+import EmailIcon from "@mui/icons-material/Email";
+import ArticleIcon from "@mui/icons-material/Article";
+import HelpIcon from "@mui/icons-material/Help";
+import ShowChartIcon from "@mui/icons-material/ShowChart";
+import AgricultureIcon from "@mui/icons-material/Agriculture";
+
 import { useSocialConnect } from "@/SocialConnect/useSocialConnect";
 import SocialConnectUI from "@/components/SocialConnectUI";
 import { Disclosure } from "@headlessui/react";
@@ -5,25 +14,17 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useConnect } from "wagmi";
 import { injected } from "wagmi/connectors";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
-  const [hideConnectBtn, setHideConnectBtn] = useState(false);
-  const { account, connected, lookupAddress } = useSocialConnect();
 
-  const { data: session } = useSession();
+  // const { data: session } = useSession();
 
-  const { connect } = useConnect();
-
-  useEffect(() => {
-    if (window.ethereum && window.ethereum.isMiniPay) {
-      setHideConnectBtn(true);
-      connect({ connector: injected({ target: "metaMask" }) });
-    }
-  }, [connect]);
+  // const { connect } = useConnect();
 
   return (
     <>
@@ -33,10 +34,7 @@ export default function Header() {
           setIsOpen(false);
         }}
       />
-      <Disclosure
-        as="nav"
-        className="bg-slate-500 border-b border-slate-500 fixed top-0 left-0 right-0 z-10"
-      >
+      <Disclosure as="nav" className="bg-white fixed top-0 left-0 right-0 z-10">
         {({ open }) => (
           <>
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -67,45 +65,76 @@ export default function Header() {
                   <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                     <a
                       href="/"
-                      className="inline-flex items-center px-1 pt-1 text-sm font-medium text-white"
+                      className="inline-flex items-center px-1 pt-1 text-sm md:text-lg font-medium text-black"
                     >
                       Home
                     </a>
                   </div>
                 </div>
-
-                {/* connect button */}
-
-                {/* <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                  {!hideConnectBtn && (
-                    <ConnectButton
-                      showBalance={{ smallScreen: true, largeScreen: false }}
-                    />
-                  )}
-                </div>
-                {connected && account && (
-                  <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-                    <button
-                      type="button"
-                      onClick={() => setIsOpen(true)}
-                      className="text-white bg-[#050708] hover:bg-[#050708]/80 focus:ring-4 focus:outline-none focus:ring-[#050708]/50 font-medium rounded-xl text-md px-5 py-2.5 text-center inline-flex items-center dark:hover:bg-[#050708]/40 dark:focus:ring-gray-600"
-                    >
-                      Social Connect
-                    </button>
-                  </div>
-                )} */}
               </div>
             </div>
 
             <Disclosure.Panel className="sm:hidden">
-              <div className="space-y-1 pt-2 pb-4">
-                <Disclosure.Button
-                  as="a"
-                  href="/"
-                  className="block border-l-4 border-black py-2 pl-3 pr-4 text-base font-medium text-white"
-                >
-                  Home
-                </Disclosure.Button>
+              <div className="space-y-1 p-2 pb-4 text-gray-500">
+                <div className="flex flex-row gap-5">
+                  <HouseIcon />
+                  <Link href="/my-profile">
+                    <h1>Profile</h1>
+                  </Link>
+                </div>
+                <div className="flex flex-row gap-5">
+                  <HouseIcon />
+                  <Link href="/">
+                    <h1>Feed</h1>
+                  </Link>
+                </div>
+
+                <div className="flex flex-row gap-5">
+                  <EmailIcon />
+                  <Link href="/">
+                    <h1>Messages</h1>
+                  </Link>
+                </div>
+                <div className="flex flex-row gap-5">
+                  <LocalGroceryStoreIcon />
+                  <Link href="/marketplace">
+                    <h1>MarketPlace</h1>
+                  </Link>
+                </div>
+                <div className="flex flex-row gap-5">
+                  <AccountBalanceIcon />
+                  <Link href="/DAO">
+                    <h1>Governance</h1>
+                  </Link>
+                </div>
+                <div className="flex flex-row gap-5">
+                  <ShowChartIcon />
+                  <Link href="/DAO">
+                    <h1>Staking</h1>
+                  </Link>
+                </div>
+                <div className="flex flex-row gap-5">
+                  <AgricultureIcon />
+                  <Link href="/DAO">
+                    <h1>Yield Farming</h1>
+                  </Link>
+                </div>
+
+                <hr className="pt-5" />
+
+                <div className="flex flex-row gap-5">
+                  <ArticleIcon />
+                  <Link href="/">
+                    <h1>Docs</h1>
+                  </Link>
+                </div>
+
+                <div className="flex flex-row gap-5">
+                  <HelpIcon />
+                  <Link href="/">
+                    <h1>Help</h1>
+                  </Link>
+                </div>
                 {/* Add here your custom menu elements */}
               </div>
             </Disclosure.Panel>
