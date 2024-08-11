@@ -7,7 +7,7 @@ import { injectedWallet } from "@rainbow-me/rainbowkit/wallets";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import type { AppProps } from "next/app";
-import { celo, celoAlfajores } from "viem/chains";
+import { base, baseSepolia } from "viem/chains";
 import { WagmiProvider, createConfig, http } from "wagmi";
 import Layout from "../components/Layout";
 import "../styles/globals.css";
@@ -29,10 +29,10 @@ const connectors = connectorsForWallets(
 
 const config = createConfig({
   connectors,
-  chains: [celo, celoAlfajores],
+  chains: [base, baseSepolia],
   transports: {
-    [celo.id]: http(),
-    [celoAlfajores.id]: http(),
+    [base.id]: http(),
+    [baseSepolia.id]: http(),
   },
 });
 
