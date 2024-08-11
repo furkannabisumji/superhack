@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { PhotoIcon } from "@heroicons/react/24/outline";
+import GlobalApi from "@/utils/GlobalApi";
 
 type Props = {
   post: string;
@@ -24,6 +25,35 @@ function CreatePost({
   className,
 }: Props) {
   const [open, setOpen] = useState(false);
+  const [image, setImage] = useState<File | null>(null);
+  const [preview, setPreview] = useState<string | null>(null);
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    if (file) {
+      setImage(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreview(reader.result as string);
+      };
+      reader;
+      // console.log(reader.readAsDataURL.name);
+    }
+  };
+
+  useEffect(() => {
+    postImg;
+  }, []);
+  const postImg = () => {
+    const data = {
+      img: image,
+    };
+    GlobalApi.postImg(data.img).then((resp) => {
+      console.log(resp);
+      setOpen(false);
+    });
+  };
+
   return (
     <div>
       {/* Modal toggle */}
@@ -93,11 +123,23 @@ function CreatePost({
                                         className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
                                       >
                                         <span>Upload a file</span>
+
+                                        {preview && (
+                                          <div className="mb-4">
+                                            <img
+                                              src={preview}
+                                              alt="Preview"
+                                              className="h-40 w-40 object-cover rounded-md"
+                                            />
+                                          </div>
+                                        )}
                                         <input
                                           id="file-upload"
-                                          name="file-upload"
+                                          name="imaged"
                                           type="file"
+                                          accept="image"
                                           className="sr-only"
+                                          onChange={handleImageChange}
                                         />
                                       </label>
                                       <p className="pl-1">or drag and drop</p>
@@ -119,7 +161,7 @@ function CreatePost({
               <div className="bg-gray-50 px-4 py-3 sm:flex gap-2 sm:flex-row-reverse sm:px-6">
                 <button
                   type="button"
-                  onClick={onCreatePostClick}
+                  onClick={() => postImg()}
                   className="rounded-full border border-slate-500 bg-slate-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
                 >
                   Create

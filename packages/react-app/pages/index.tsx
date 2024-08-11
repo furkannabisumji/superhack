@@ -22,6 +22,7 @@ import ProfileCard from "@/components/profileCard";
 import SideBarCard from "@/components/sideBarCard";
 import LeftSide from "@/components/refactors/leftSide";
 import RightSide from "@/components/refactors/rightSide";
+import globalApi from "@/utils/GlobalApi";
 
 export default function Home() {
   // const [account] = useState([]);
@@ -29,6 +30,7 @@ export default function Home() {
   // uncomment the line below and comment the line above to see the sign up page
 
   const [account, setAccount] = useState<boolean>(true);
+  const [username, setUsername] = useState<string>("true");
 
   // const { account } = useSocialConnect();
 
@@ -57,6 +59,15 @@ export default function Home() {
       setModal2Open(true);
     }
   }, [isSuccess]);
+
+  useEffect(() => {
+    const createUser = () => {
+      const data = {
+        userName: username,
+      };
+      globalApi.createUser(data).then((res) => {});
+    };
+  }, []);
 
   // worldId functions
 
@@ -186,7 +197,7 @@ export default function Home() {
                 id="username"
                 name="username"
                 className="block w-full rounded-md border-0 py-1.5 px-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                defaultValue={""}
+                value={username}
               />
 
               <button

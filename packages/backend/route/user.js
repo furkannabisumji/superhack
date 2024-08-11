@@ -1,56 +1,71 @@
-import express from 'express';
-import { verifyCloudProof } from '@worldcoin/idkit';
-import { contract, contractAddresses, devAccount, pythContract, web3 } from '../web3/web3Contracts.js';
-import { upload } from '../clients/s3.js';
-import { PriceServiceConnection, PriceFeed } from '@pythnetwork/price-service-client';
+import express from "express";
+import { verifyCloudProof } from "@worldcoin/idkit";
+import {
+  contract,
+  contractAddresses,
+  devAccount,
+  pythContract,
+  web3,
+} from "../web3/web3Contracts.js";
+import { upload } from "../clients/s3.js";
+import {
+  PriceServiceConnection,
+  PriceFeed,
+} from "@pythnetwork/price-service-client";
 
 const router = express.Router();
-router.post('/verify', async (req, res) => {
+router.post("/verify", async (req, res) => {
   try {
-    const verifyRes = await verifyCloudProof(req.body, process.env.APP_ID, process.env.ACTION_ID);
+    const verifyRes = await verifyCloudProof(
+      req.body,
+      process.env.APP_ID,
+      process.env.ACTION_ID
+    );
     if (verifyRes.success) {
-      const user = await contract.methods.getUser(req.body.address).call()
-      if(user.username.length===0){
-      const txData = contract.methods.registerUser(req.body.address, req.body.nullifier_hash, req.body.username).encodeABI();
-      const signedTx = await devAccount.signTransaction({
-        from: devAccount.address,
-        to: contractAddresses.social,
-        data: txData,
-        gasPrice: await web3.eth.getGasPrice(), 
-        gasLimit: '5190000',
-      });
-       await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-    }
-        return res.status(200).json({ status: 'ok' });
+      const user = await contract.methods.getUser(req.body.address).call();
+      if (user.username.length === 0) {
+        const txData = contract.methods
+          .registerUser(
+            req.body.address,
+            req.body.nullifier_hash,
+            req.body.username
+          )
+          .encodeABI();
+        const signedTx = await devAccount.signTransaction({
+          from: devAccount.address,
+          to: contractAddresses.social,
+          data: txData,
+          gasPrice: await web3.eth.getGasPrice(),
+          gasLimit: "5190000",
+        });
+        await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
+      }
+      return res.status(200).json({ status: "ok" });
     } else {
       return res.status(400).send(verifyRes);
     }
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ error: 'Internal server error' });
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.post('/upload', upload.single('image'), async (req, res) => {
+router.post("/upload", upload.single("image"), async (req, res) => {
   try {
-
-  return res.json({key: req.file.key})   
+    return res.json({ key: req.file });
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ error: 'Internal server error' });
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
 
-router.post('/pyth', async (req, res) => {
-   const connection = new PriceServiceConnection("https://hermes.pyth.network", {
+router.post("/pyth", async (req, res) => {
+  const connection = new PriceServiceConnection("https://hermes.pyth.network", {
     priceFeedRequestConfig: {
       // Retrieve binary price updates for on-chain contracts
       binary: true,
-      
-    }
+    },
   });
-
-  
 
   // Define the price IDs you are interested in
   const priceIds = [
@@ -62,7 +77,7 @@ router.post('/pyth', async (req, res) => {
     "0x5de33a9112c2b700b8d30b8a3402c103578ccfa2765696471cc672bd5cf6ac52", // MATIC/USD price id
     "0xef0d8b6fda2ceba41da15d4095d1da392a0d2f8ed0c6c7bc0f4cfac8c280b56d", // SOL/USD price id
     "0x8963217838ab4cf5cadc172203c1f0b763fbaa45f346d8ee50ba994bbcac3026", // TON/USD price id
-    "0xdcef50dd0a4cd2dcc17e45df1676dcb336a11a61c69df7a0299b0150c672d25c"  // DOGE/USD price id
+    "0xdcef50dd0a4cd2dcc17e45df1676dcb336a11a61c69df7a0299b0150c672d25c", // DOGE/USD price id
   ];
 
   try {
@@ -74,30 +89,38 @@ router.post('/pyth', async (req, res) => {
 
     if (priceFeeds) {
       // Display the prices
-      priceFeeds.forEach(priceFeed => {
-      });
+      priceFeeds.forEach((priceFeed) => {});
 
       // Subscribe to price feed updates
       connection.subscribePriceFeedUpdates(priceIds, async (priceFeed) => {
         console.log(priceFeed.getPriceNoOlderThan(3));
-    const verifyRes = await verifyCloudProof(req.body, process.env.APP_ID, process.env.ACTION_ID);
-      const txData = pythContract.methods.registerUser(req.body.address, req.body.nullifier_hash, req.body.username).encodeABI();
-      const signedTx = await devAccount.signTransaction({
-        from: devAccount.address,
-        to: contractAddresses.social,
-        data: txData,
-        gasPrice: await web3.eth.getGasPrice(), 
-        gasLimit: '5190000',
+        const verifyRes = await verifyCloudProof(
+          req.body,
+          process.env.APP_ID,
+          process.env.ACTION_ID
+        );
+        const txData = pythContract.methods
+          .registerUser(
+            req.body.address,
+            req.body.nullifier_hash,
+            req.body.username
+          )
+          .encodeABI();
+        const signedTx = await devAccount.signTransaction({
+          from: devAccount.address,
+          to: contractAddresses.social,
+          data: txData,
+          gasPrice: await web3.eth.getGasPrice(),
+          gasLimit: "5190000",
+        });
+        // await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
       });
-      // await web3.eth.sendSignedTransaction(signedTx.rawTransaction);
-      })
-        return res.status(200).json({ status: 'ok' });
+      return res.status(200).json({ status: "ok" });
     }
   } catch (error) {
-    console.log(error)
-    return res.status(500).json({ error: 'Internal server error' });
+    console.log(error);
+    return res.status(500).json({ error: "Internal server error" });
   }
 });
-
 
 export default router;
