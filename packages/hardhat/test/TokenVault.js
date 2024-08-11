@@ -1,4 +1,10 @@
-import { expect } from "chai";
+let chai;
+import("chai").then((chaiModule) => {
+  chai = chaiModule.default;
+});
+
+
+
 const { ethers } = require("hardhat");
 const { time } = require("@openzeppelin/test-helpers");
 
