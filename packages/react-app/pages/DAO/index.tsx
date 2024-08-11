@@ -1,9 +1,9 @@
 import { Chip, LinearProgress } from "@mui/material";
 import React, { FormEvent, useEffect, useState } from "react";
-import { Contract, ethers } from "ethers";
+import { useReadContract, useWriteContract, useAccount } from "wagmi";
 import LeftSide from "@/components/refactors/leftSide";
 import RightSide from "@/components/refactors/rightSide";
-
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import {
   Description,
   Dialog,
@@ -21,9 +21,6 @@ interface Proposal {
 }
 
 const DAO = () => {
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
-  const [signer, setSigner] = useState<ethers.Signer | null>(null);
-  const [contract, setContract] = useState<Contract | null>(null);
   const [open, setOpen] = useState(false);
   const [open2, setOpen2] = useState(false);
 
@@ -31,7 +28,8 @@ const DAO = () => {
   const [loading, setLoading] = useState(false);
   const [transactionHash, setTransactionHash] = useState("");
   const [error, setError] = useState("");
-
+  const {isConnected} = useAccount()
+  const {writeContract} = useWriteContract()
   const [description, setDescription] = useState<string>("");
   const [proposals, setProposals] = useState<Proposal[]>([]);
 
@@ -156,64 +154,11 @@ const DAO = () => {
     },
   ];
 
-  // Function to initialize the contract
-  useEffect(() => {
-    const init = async () => {
-      // First, let's make sure the user has MetaMask installed
-      if (typeof window.ethereum !== "undefined") {
-        // Use MetaMask's provider  
-        const accounts = await window.ethereum.request({
-      method: "eth_requestAccounts",
-    });
-
-    const provider = new ethers.BrowserProvider(window.ethereum)
-    const walletAddress = accounts[0]    // first account in MetaMask
-    const signer = provider.getSigner(walletAddress)
-        const contract = new ethers.Contract(
-          "0xe4EB01021211D57c6f2a5940232301833A850d5d",
-          contractABI,
-          await signer
-        );
-
-        setProvider(provider);
-        setSigner(await signer);
-        setContract(contract);
-        // console.log();
-      } else {
-        console.log("Please install MetaMask to interact with this app.");
-      }
-    };
-
-    init();
-    // fetchProposal();
-  }, []);
-
-  const fetchProposal = async () => {
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        "0xe4EB01021211D57c6f2a5940232301833A850d5d",
-        contractABI,
-        await signer
-      );
-
-      const proposalsData = await contract.getAllProposals();
-      const proposalsList: Proposal[] = proposalsData.map(
-        (proposal: any, index: number) => ({
-          id: index,
-          initiator: proposal.initiator,
-          description: proposal.description,
-          time: proposal.timestamp,
-        })
-      );
-      setProposals(proposalsList);
-      console.log(proposalsList);
-    } catch (err) {
-      console.error("Error fetching proposals:", err);
-      setError("Failed to fetch proposals");
-    }
-  };
+  const result = useReadContract({
+    abi: contractABI,
+    address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+    functionName: 'getAllProposals',
+  })
 
   // const transferOwnerShip = async (event: FormEvent) => {
   //   event.preventDefault();
@@ -275,41 +220,10 @@ const DAO = () => {
   //   } finally {
   //     setLoading(false);
   //   }
-  // };
-
-  const handleSubmit = async (event: FormEvent) => {
-    event.preventDefault();
-
-    // Reset any previous errors or transaction hashes
-    setError("");
-    setTransactionHash("");
-    setLoading(true);
-
-    try {
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = provider.getSigner();
-      const contract = new ethers.Contract(
-        "0xe4EB01021211D57c6f2a5940232301833A850d5d",
-        contractABI,
-        await signer
-      );
-      // const tx = await contract.initiateProposal(_description);
-
-      // const reciept = await tx.wait();
-
-      // setTransactionHash(reciept.transactionHash);
-
-      // console.log(reciept.transactionHash);
-    } catch (err) {
-      console.error("Error submitting proposal:", err);
-      setError("Failed to submit proposal");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="flex flex-row bg-white md:mx-auto rounded shadow-xl w-full md:w-3/6 overflow-hidden mt-10">
+  // 
+console.log(result)
+  return  (
+    isConnected?<div className="flex flex-row bg-white md:mx-auto rounded shadow-xl w-full md:w-3/6 overflow-hidden mt-10">
       <Dialog open={open} onClose={setOpen} className="relative z-10">
         <div className="fixed inset-0 z-10 w-screen overflow-y-auto">
           <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
@@ -317,7 +231,6 @@ const DAO = () => {
               // transition
               className="relative transform overflow-hidden rounded-lg bg-white text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-lg data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
             >
-              <form onSubmit={handleSubmit}>
                 <div className="bg-white px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                   <div className="">
                     <div className="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
@@ -362,7 +275,14 @@ const DAO = () => {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 sm:flex gap-2 sm:flex-row-reverse sm:px-6">
                   <button
-                    type="submit"
+                    onClick={() => 
+                      writeContract({ 
+                        abi: contractABI,
+                        address: '0x6b175474e89094c44da98b954eedeac495271d0f',
+                        functionName: 'initiateProposal',
+                        args: [description]
+                     })
+                    }
                     className="rounded-full border border-slate-500 bg-slate-500 py-1.5 px-5 text-white transition-all hover:bg-white hover:text-black text-center text-sm font-inter flex items-center justify-center"
                   >
                     Create
@@ -376,7 +296,6 @@ const DAO = () => {
                     Cancel
                   </button>
                 </div>
-              </form>
             </DialogPanel>
           </div>
         </div>
@@ -509,120 +428,13 @@ const DAO = () => {
                   margin of 20% of votes participated in the vote
                 </li>
               </ul>
-            </div>
-          </div>
-
-          <div className="flex flex-col break-inside py-2 px-5 rounded-xl bg-white dark:bg-slate-100 bg-clip-border">
-            <div className="flex flex-row justify-between items-center">
-              {/* left */}
-
-              <div className="flex flex-col gap-2">
-                <h2 className="p-3">Proposal 1</h2>
-
-                <Chip
-                  label="Passed"
-                  variant="outlined"
-                  size="small"
-                  className="text-[11px] p-2 text-green-400 border-green-400"
-                />
-              </div>
-
-              {/* right */}
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row gap-2">
-                  <button
-                    onClick={() => {}}
-                    className="rounded-full border border-green-bg-green-400 bg-green-500 py-1.5 px-5 text-white transition-all text-center text-xs font-inter flex items-center justify-center"
-                  >
-                    Let's do it
-                  </button>
-                  <div className="flex flex-col">
-                    <h2>50%</h2>
-                    <LinearProgress
-                      color="success"
-                      variant="determinate"
-                      value={50}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-row gap-2">
-                  <button
-                    onClick={() => {}}
-                    className="rounded-full border border-red-500 bg-red-border-red-500 py-1.5 px-5 text-black transition-all text-center text-xs font-inter flex items-center justify-center"
-                  >
-                    No way
-                  </button>
-                  <div className="flex flex-col">
-                    <h2>50%</h2>
-                    <LinearProgress
-                      color="error"
-                      variant="determinate"
-                      value={50}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="flex flex-col break-inside py-2 px-5 rounded-xl bg-white dark:bg-slate-100 bg-clip-border">
-            <div className="flex flex-row justify-between items-center">
-              {/* left */}
-
-              <div className="flex flex-col gap-2">
-                <h2 className="p-3">Proposal 2</h2>
-
-                <Chip
-                  label="Passed"
-                  variant="outlined"
-                  size="small"
-                  className="text-[11px] p-2 text-green-400 border-green-400"
-                />
-              </div>
-
-              {/* right */}
-              <div className="flex flex-col gap-2">
-                <div className="flex flex-row gap-2">
-                  <button
-                    onClick={() => {}}
-                    className="rounded-full border border-green-bg-green-400 bg-green-500 py-1.5 px-5 text-white transition-all  text-center text-xs font-inter flex items-center justify-center"
-                  >
-                    Let's do it
-                  </button>
-                  <div className="flex flex-col">
-                    <h2>50%</h2>
-                    <LinearProgress
-                      color="success"
-                      variant="determinate"
-                      value={50}
-                    />
-                  </div>
-                </div>
-
-                <div className="flex flex-row gap-2">
-                  <button
-                    onClick={() => {}}
-                    className="rounded-full border border-red-500 bg-red-border-red-500 py-1.5 px-5 text-black transition-all  text-center text-xs font-inter flex items-center justify-center"
-                  >
-                    No way
-                  </button>
-                  <div className="flex flex-col">
-                    <h2>50%</h2>
-                    <LinearProgress
-                      color="error"
-                      variant="determinate"
-                      value={50}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
+            </div>  
           </div>
         </div>
       </div>
       <RightSide />
     </div>
-  );
+  :<ConnectButton/>)
 };
 
 export default DAO;
