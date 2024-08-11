@@ -72,7 +72,7 @@ export default function Home() {
   // worldId functions
 
   const handleVerify = async (proof: ISuccessResult) => {
-    const res = await fetch("http://localhost:3001/verify", {
+    const res = await fetch("/api/auth/verify", {
       // route to your backend will depend on implementation
       method: "POST",
       headers: {
