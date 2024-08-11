@@ -24,12 +24,12 @@ function SideBarCard({}: Props) {
           <h1>Messages</h1>
         </Link>
       </div>
-      <div className="flex flex-row gap-5">
+      {/* <div className="flex flex-row gap-5">
         <LocalGroceryStoreIcon />
         <Link href="/marketplace">
           <h1>MarketPlace</h1>
         </Link>
-      </div>
+      </div> */}
       <div className="flex flex-row gap-5">
         <AccountBalanceIcon />
         <Link href="/DAO">
