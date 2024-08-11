@@ -69,6 +69,9 @@ contract Social {
     // Event emitted when a new comment is added to a post
     event CommentAdded(uint256 postId, address indexed userAddress, string content);
 
+    //All posts
+    Post[] public allPosts;
+
     constructor() {
         devAddress = msg.sender;
     }
@@ -78,7 +81,7 @@ contract Social {
         _;
     }
 
-    function registerUser(string memory _worldId, string memory _username) public onlyDev {
+    function registerUser(address _user, string memory _worldId, string memory _username) public onlyDev {
         require(bytes(_worldId).length > 0, "WorldID is required");
         require(bytes(_username).length > 0, "Username is required");
         require(!worldIdExists[_worldId], "WorldID already registered");
@@ -90,7 +93,7 @@ contract Social {
             username: _username
         });
 
-        users[msg.sender] = newUser;
+        users[_user] = newUser;
         worldIdExists[_worldId] = true;
         usernameExists[_username] = true;
 
@@ -115,7 +118,7 @@ contract Social {
             timestamp: block.timestamp,
             postId: postCounter
         });
-
+        allPosts.push(newPost);
         posts[sender.worldId].push(newPost);
 
         emit PostCreated(sender.worldId, _content, _imageUrl, block.timestamp, postCounter);
